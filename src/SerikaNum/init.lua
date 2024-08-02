@@ -80,7 +80,7 @@ function SerikaNum.lessThan(mantissa1: number, exponent1: number, mantissa2: num
 	if (exponent1 == exponent2) then
 		return mantissa1 < mantissa2;
 	else
-		return math.sign(mantissa1) * exponent1 < math.sign(mantissa2) * exponent2;
+		return math.sign(mantissa1) * math.abs(exponent1) < math.sign(mantissa2) * math.abs(exponent2);
 	end
 end
 
@@ -88,7 +88,7 @@ function SerikaNum.lessEquals(mantissa1: number, exponent1: number, mantissa2: n
 	if (exponent1 == exponent2) then
 		return mantissa1 <= mantissa2;
 	else
-		return math.sign(mantissa1) * exponent1 < math.sign(mantissa2) * exponent2;
+		return math.sign(mantissa1) * math.abs(exponent1) < math.sign(mantissa2) * math.abs(exponent2);
 	end
 end
 
@@ -96,7 +96,7 @@ function SerikaNum.moreThan(mantissa1: number, exponent1: number, mantissa2: num
 	if (exponent1 == exponent2) then
 		return mantissa1 > mantissa2;
 	else
-		return math.sign(mantissa1) * exponent1 > math.sign(mantissa2) * exponent2;
+		return math.sign(mantissa1) * math.abs(exponent1) > math.sign(mantissa2) * math.abs(exponent2);
 	end
 end
 
@@ -104,7 +104,7 @@ function SerikaNum.moreEquals(mantissa1: number, exponent1: number, mantissa2: n
 	if (exponent1 == exponent2) then
 		return mantissa1 >= mantissa2;
 	else
-		return math.sign(mantissa1) * exponent1 > math.sign(mantissa2) * exponent2;
+		return math.sign(mantissa1) * math.abs(exponent1) > math.sign(mantissa2) * math.abs(exponent2);
 	end
 end
 
