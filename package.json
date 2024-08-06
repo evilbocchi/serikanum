@@ -1,20 +1,21 @@
 {
   "name": "@antivivi/serikanum",
-  "version": "1.1.0",
-  "description": "",
+  "version": "1.2.0",
+  "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
   "main": "out/init.lua",
   "scripts": {
     "build": "rbxtsc",
     "watch": "rbxtsc -w",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "docs": "npx typedoc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evilbocchi/serikanum.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "evilbocchi",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/evilbocchi/serikanum/issues"
   },
@@ -35,6 +36,9 @@
     "eslint": "^8.57.0",
     "eslint-plugin-roblox-ts": "^0.0.36",
     "roblox-ts": "^2.3.0",
+    "typedoc": "^0.26.5",
+    "typedoc-material-theme": "^1.1.0",
+    "typedoc-plugin-missing-exports": "^3.0.0",
     "typescript": "^5.5.4"
   }
 }

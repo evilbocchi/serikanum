@@ -1,40 +1,93 @@
-type BaseOnoeNum = {mantissa: number, exponent: number};
-type Number = number | BaseOnoeNum;
+import Suffixer from "./Suffixer";
 
-declare interface OnoeNum extends BaseOnoeNum {
-    /* macro for OnoeNum + OnoeNum */
+/** 
+ * The base version of an OnoeNum object, stripped of its metatables and metamethods.
+ * This type commonly appears when sending OnoeNum objects over the client-server boundary or saving it in datastores.
+ * 
+ * @example
+ * {mantissa: 5.22, exponent: 4} // This represents 5.22 * 10^4, or 52200.
+ */
+interface BaseOnoeNum {
+    /** This number primitive represents the significant digits of the entire number. */
+    mantissa: number,
+    /** This number primitive represents how much to exponentiate the mantissa by. */
+    exponent: number
+}
+
+/** An object representing a number in this library. This could be a number primitive, {@link BaseOnoeNum} or {@link OnoeNum}.*/
+type Number = BaseOnoeNum | number;
+
+/**
+ * Wrapper library for SerikaNum.
+ */
+interface OnoeNum extends BaseOnoeNum {
+    /** macro for OnoeNum + OnoeNum */
 	add(number: Number): OnoeNum;
-    /* macro for OnoeNum - OnoeNum */
+    /** macro for OnoeNum - OnoeNum */
     sub(number: Number): OnoeNum;
-    /* macro for OnoeNum * OnoeNum */
+    /** macro for OnoeNum * OnoeNum */
     mul(number: Number): OnoeNum;
-    /* macro for OnoeNum / OnoeNum */
+    /** macro for OnoeNum / OnoeNum */
     div(number: Number): OnoeNum;
-    /* macro for OnoeNum ^ OnoeNum */
+    /** macro for OnoeNum ^ OnoeNum */
     pow(number: Number): OnoeNum;
-    /* macro for OnoeNum % OnoeNum */
+    /** macro for OnoeNum % OnoeNum */
     mod(number: Number): OnoeNum;
 
-    /* macro for OnoeNum == OnoeNum */
+    /** macro for OnoeNum == OnoeNum */
     equals(number: Number): boolean;
-    /* macro for OnoeNum < OnoeNum */
+    /** macro for OnoeNum < OnoeNum */
     lessThan(number: Number): boolean;
-    /* macro for OnoeNum <= OnoeNum */
+    /** macro for OnoeNum <= OnoeNum */
     lessEquals(number: Number): boolean;
-    /* macro for OnoeNum > OnoeNum */
+    /** macro for OnoeNum > OnoeNum */
     moreThan(number: Number): boolean;
-    /* macro for OnoeNum >= OnoeNum */
+    /** macro for OnoeNum >= OnoeNum */
     moreEquals(number: Number): boolean;
-    
+
+    /**
+     * Rounds down the OnoeNum to the nearest integer.
+     * This operation is unsafe for numbers beyond 2^1024.
+     */
+	floor(): OnoeNum;
+    /**
+     * Rounds the OnoeNum to the nearest integer.
+     * This operation is unsafe for numbers beyond 2^1024.
+     */
+	round(): OnoeNum;
+    /**
+     * Rounds up the OnoeNum to the nearest integer.
+     * This operation is unsafe for numbers beyond 2^1024.
+     */
+	ceil(): OnoeNum;
+    /**
+     * Get the absolute value of the OnoeNum.
+     */
+	abs(): OnoeNum;
+    /**
+     * Flips the sign of the OnoeNum object.
+     * Equivalent to multiplying by -1.
+     */
+    unary(): OnoeNum;
     /**
      * Reverts the OnoeNum back to a primitive number.
-     * For numbers beyond 1e+308, this will return `math.huge`.
+     * For numbers beyond 2^1024, this will return `math.huge`.
      */
     revert(): number;
     /**
+     * Get the logarithm of the OnoeNum object with the specified primitive number base.
+     * 
+     * @param base Base of the logarithm as a primitive number
+     */
+	log(base: number): OnoeNum | undefined;
+    /**
+     * Get the logarithm of the OnoeNum object with a base of 10.
+     */
+	log10(): OnoeNum | undefined;
+    /**
      * Converts the OnoeNum object into a string with the specified mode.
-     * If suffix is used, this method is equivalent to `toSuffix()`.
-     * If scientific is used, this method is equivalent to `toScientific()`.
+     * If suffix is used, this method is equivalent to {@link OnoeNum.toSuffix}.
+     * If scientific is used, this method is equivalent to {@link OnoeNum.toScientific}.
      * 
      * @param mode Mode of conversion to string
      * @returns Resulting string
@@ -42,7 +95,7 @@ declare interface OnoeNum extends BaseOnoeNum {
     toString(mode?: "suffix" | "scientific"): string;
     /**
      * Converts the OnoeNum into a string with a number and suffix.
-     * Use the `SerikaNum.changeSuffix()` method to edit the suffixes. 
+     * Use the {@link Suffixer.changeSuffixes} method to edit the suffixes.
      * If a suffix for the specified OnoeNum tuple is not found, scientific notation is used.
      * 
      * @returns Resulting string
@@ -64,6 +117,10 @@ declare interface OnoeNum extends BaseOnoeNum {
     toSingle(): number;
 }
 
+/**
+ * Static version of {@link OnoeNum}. This is only separated because roblox-ts requires it.
+ * You can simply ignore the naming and treat this interface as {@link OnoeNum}.
+ */
 interface OnoeNumConstructor {
     /**
      * Create a new OnoeNum object from a primitive number.
@@ -82,7 +139,7 @@ interface OnoeNumConstructor {
 
     /**
      * Rounds down the OnoeNum to the nearest integer.
-     * This operation is unsafe for numbers beyond 1e+308.
+     * This operation is unsafe for numbers beyond 2^1024.
      * 
      * @param number Number to round down
      * @returns OnoeNum rounded down to the nearest integer
@@ -90,7 +147,7 @@ interface OnoeNumConstructor {
 	floor: (number: Number) => OnoeNum;
     /**
      * Rounds the OnoeNum to the nearest integer.
-     * This operation is unsafe for numbers beyond 1e+308.
+     * This operation is unsafe for numbers beyond 2^1024.
      * 
      * @param number Number to round
      * @returns OnoeNum rounded to the nearest integer
@@ -98,7 +155,7 @@ interface OnoeNumConstructor {
 	round: (number: Number) => OnoeNum;
     /**
      * Rounds up the OnoeNum to the nearest integer.
-     * This operation is unsafe for numbers beyond 1e+308.
+     * This operation is unsafe for numbers beyond 2^1024.
      * 
      * @param number Number to round up
      * @returns OnoeNum rounded up to the nearest integer
@@ -121,7 +178,7 @@ interface OnoeNumConstructor {
     unary: (number: Number) => OnoeNum;
     /**
      * Reverts the OnoeNum back to a primitive number.
-     * For numbers beyond 1e+308, this will return `math.huge`.
+     * For numbers beyond 2^1024, this will return `math.huge`.
      * 
      * @param number OnoeNum object
      * @returns Reverted primitive number
@@ -144,8 +201,8 @@ interface OnoeNumConstructor {
 	log10: (number: Number) => OnoeNum | undefined;
     /**
      * Converts the OnoeNum object into a string with the specified mode.
-     * If suffix is used, this method is equivalent to `toSuffix()`.
-     * If scientific is used, this method is equivalent to `toScientific()`.
+     * If suffix is used, this method is equivalent to {@link toSuffix}.
+     * If scientific is used, this method is equivalent to {@link toScientific}.
      * 
      * @param number OnoeNum object
      * @param mode Mode of conversion to string
@@ -154,7 +211,7 @@ interface OnoeNumConstructor {
     toString: (number: Number, mode?: "suffix" | "scientific") => string;
     /**
      * Converts the OnoeNum into a string with a number and suffix.
-     * Use the `SerikaNum.changeSuffix()` method to edit the suffixes. 
+     * Use the {@link Suffixer.changeSuffixes} method to edit the suffixes.
      * If a suffix for the specified OnoeNum tuple is not found, scientific notation is used.
      * 
      * @param number OnoeNum object
@@ -186,7 +243,7 @@ interface OnoeNumConstructor {
      * @param single Single primitive number
      * @returns Resulting OnoeNum object
      */
-    fromSingle: (number: number) => OnoeNum;
+    fromSingle: (single: number) => OnoeNum;
     /**
      * Returns the maximum value of all OnoeNum objects passed.
      * 
@@ -203,6 +260,7 @@ interface OnoeNumConstructor {
     min: (...numbers: Number[]) => OnoeNum;
 }
 
+/** @hidden */
 declare const OnoeNum: OnoeNumConstructor;
 
 export = OnoeNum;

@@ -1,0 +1,7 @@
+{
+    "plugin": ["typedoc-material-theme", "typedoc-plugin-missing-exports"],
+    "themeColor": "#ff4da0",
+    "projectDocuments": ["documents/*.md"],
+    "placeInternalsInOwningModule": true,
+    "highlightLanguages": ["lua", "typescript"]
+}

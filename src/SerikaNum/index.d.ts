@@ -1,4 +1,9 @@
-interface SerikaNum {
+import Suffixer from "./Suffixer";
+
+/**
+ * Basic library for performing mathematical operations on numbers exceeding 2^1024.
+ */
+declare interface SerikaNum {
     /** Create a new SerikaNum tuple from a primitive number, returning the mantissa and exponent respectively. */
 	new (number: number): LuaTuple<[number, number]>;
 
@@ -116,7 +121,7 @@ interface SerikaNum {
 
     /**
      * Rounds down the SerikaNum tuple to the nearest integer.
-     * This operation is unsafe for numbers beyond 1e+308.
+     * This operation is unsafe for numbers beyond 2^1024.
      * 
      * @param mantissa SerikaNum tuple's mantissa
      * @param exponent SerikaNum tuple's exponent
@@ -125,7 +130,7 @@ interface SerikaNum {
 	floor: (mantissa: number, exponent: number) => LuaTuple<[number, number]>;
     /**
      * Rounds the SerikaNum tuple to the nearest integer.
-     * This operation is unsafe for numbers beyond 1e+308.
+     * This operation is unsafe for numbers beyond 2^1024.
      * 
      * @param mantissa SerikaNum tuple's mantissa
      * @param exponent SerikaNum tuple's exponent
@@ -134,7 +139,7 @@ interface SerikaNum {
 	round: (mantissa: number, exponent: number) => LuaTuple<[number, number]>;
      /**
      * Rounds up the SerikaNum tuple to the nearest integer.
-     * This operation is unsafe for numbers beyond 1e+308.
+     * This operation is unsafe for numbers beyond 2^1024.
      * 
      * @param mantissa SerikaNum tuple's mantissa
      * @param exponent SerikaNum tuple's exponent
@@ -160,7 +165,7 @@ interface SerikaNum {
 	unary: (mantissa: number, exponent: number) => LuaTuple<[number, number]>;
     /**
      * Reverts the SerikaNum tuple back to a primitive number.
-     * For numbers beyond 1e+308, this will return `math.huge`.
+     * For numbers beyond 2^1024, this will return `math.huge`.
      * 
      * @param mantissa SerikaNum tuple's mantissa
      * @param exponent SerikaNum tuple's exponent
@@ -187,8 +192,8 @@ interface SerikaNum {
 
     /**
      * Converts the SerikaNum tuple into a string with the specified mode.
-     * If suffix is used, this method is equivalent to `toSuffix()`.
-     * If scientific is used, this method is equivalent to `toScientific()`.
+     * If suffix is used, this method is equivalent to {@link toSuffix}.
+     * If scientific is used, this method is equivalent to {@link toScientific}.
      * 
      * @param mantissa SerikaNum tuple's mantissa
      * @param exponent SerikaNum tuple's exponent
@@ -198,7 +203,7 @@ interface SerikaNum {
 	toString: (mantissa: number, exponent: number, mode?: "suffix" | "scientific") => string;
     /**
      * Converts the SerikaNum tuple into a string with a number and suffix.
-     * Use the `changeSuffix()` method to edit the suffixes. 
+     * Use the {@link Suffixer.changeSuffixes} method to edit the suffixes. 
      * If a suffix for the specified SerikaNum tuple is not found, scientific notation is used.
      * 
      * @param mantissa SerikaNum tuple's mantissa
@@ -250,20 +255,13 @@ interface SerikaNum {
      * @param decimalPoints Decimal points to display in strings
      */
 	changeDecimalPoints: (decimalPoints: number) => void;
+    
     /**
-     * Change the suffixes to be shown when using the method `toSuffix()`.
-     * 
-     * @param suffixes Suffixes in a string list. Each suffix is used for every power of 3
-     */
-	changeSuffixes: (suffixes: string[]) => void;
-    /**
-     * Change the default abbreviation mode used in `toString()`. 
+     * Change the default abbreviation mode used in {@link toString}. 
      * 
      * @param mode Abbreviation method to use
      */
 	changeDefaultAbbreviation: (mode: "suffix" | "scientific") => void;
 }
-
-declare const SerikaNum: SerikaNum;
 
 export = SerikaNum;

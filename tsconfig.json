@@ -23,5 +23,9 @@
 		"incremental": true,
 		"tsBuildInfoFile": "out/tsconfig.tsbuildinfo",
 		"declaration": true
-	}
+	},
+    "typedocOptions": {
+        "entryPoints": ["src/index.d.ts"],
+        "out": "docs"
+    }
 }
