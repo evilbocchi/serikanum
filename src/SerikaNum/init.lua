@@ -2,7 +2,7 @@
 --!native
 --!strict
 
-local SUFFIXES = require(script.Suffixes);
+local Suffixer = require(script.Suffixer);
 local THRESHOLD = 16;
 local DECIMAL_POINTS = 2;
 local DEFAULT_ABBREVIATION: "suffix" | "scientific" = "suffix";
@@ -177,7 +177,7 @@ function SerikaNum.toSuffix(mantissa: number, exponent: number): string
 	if (exponent < 3) then
 		return enforceDecimalPoints(mantissa, exponent);
 	else
-		local suffix = SUFFIXES[math.floor(exponent / 3)];
+		local suffix = Suffixer.getSuffix(exponent);
 		if (suffix == nil) then
 			return SerikaNum.toScientific(mantissa, exponent);
 		end
@@ -195,7 +195,7 @@ function SerikaNum.toSingle(mantissa: number, exponent: number): number
 end
 
 function SerikaNum.fromSingle(single: number): (number, number)
-    single /= 10000;
+	single /= 10000;
 	local split = string.split(tostring(single), ".");
 	local exponent, mantissa = split[1], split[2];
 	if (mantissa == nil) then
@@ -217,7 +217,7 @@ function SerikaNum.changeDecimalPoints(decimalPoints: number)
 end
 
 function SerikaNum.changeSuffixes(suffixes: {string})
-	SUFFIXES = suffixes;
+	Suffixer.savedSuffixes = suffixes;
 end
 
 function SerikaNum.changeDefaultAbbreviation(mode: "suffix" | "scientific")

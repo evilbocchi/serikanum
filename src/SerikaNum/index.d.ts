@@ -199,9 +199,7 @@ interface SerikaNum {
     /**
      * Converts the SerikaNum tuple into a string with a number and suffix.
      * Use the `changeSuffix()` method to edit the suffixes. 
-     * By default, InfiniteMath suffixes are used and go up to 1e+12000.
      * If a suffix for the specified SerikaNum tuple is not found, scientific notation is used.
-     * 
      * 
      * @param mantissa SerikaNum tuple's mantissa
      * @param exponent SerikaNum tuple's exponent

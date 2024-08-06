@@ -129,7 +129,8 @@ end
 
 function OnoeNum.log(number: Number, base: number)
 	local mantissa, exponent = toSerika(number);
-	return fromSerika(SerikaNum.log(mantissa, exponent));
+    mantissa, exponent = SerikaNum.log(mantissa, exponent);
+	return mantissa == nil and nil or fromSerika(mantissa, exponent);
 end
 
 function OnoeNum.log10(number: Number)
