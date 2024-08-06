@@ -3,7 +3,7 @@ import Suffixer from "./Suffixer";
 /**
  * Basic library for performing mathematical operations on numbers exceeding 2^1024.
  */
-declare interface SerikaNum {
+interface SerikaNum {
     /** Create a new SerikaNum tuple from a primitive number, returning the mantissa and exponent respectively. */
 	new (number: number): LuaTuple<[number, number]>;
 
@@ -263,5 +263,8 @@ declare interface SerikaNum {
      */
 	changeDefaultAbbreviation: (mode: "suffix" | "scientific") => void;
 }
+
+/** @hidden */
+declare const SerikaNum: SerikaNum;
 
 export = SerikaNum;
