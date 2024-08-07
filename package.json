@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rbxtsc",
     "watch": "rbxtsc -w",
-    "prepublishOnly": "npm run build",
-    "docs": "npx typedoc"
+    "docs": "npx typedoc",
+    "pub": "npm run build | npm run docs | npm publish | wally publish"
   },
   "repository": {
     "type": "git",
