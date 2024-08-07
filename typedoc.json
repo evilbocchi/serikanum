@@ -1,7 +1,10 @@
 {
-    "plugin": ["typedoc-material-theme", "typedoc-plugin-missing-exports"],
+    "plugin": ["typedoc-material-theme", "typedoc-plugin-missing-exports", "typedoc-plugin-extras"],
     "themeColor": "#ff4da0",
     "projectDocuments": ["documents/*.md"],
     "placeInternalsInOwningModule": true,
-    "highlightLanguages": ["lua", "typescript"]
+    "highlightLanguages": ["lua", "typescript"],
+    "favicon": "assets/favicon.png",
+    "customTitle": "SerikaNum",
+    "customDescription": "Onoe Serika's go-to big number library for small and large-scale incremental games!"
 }
