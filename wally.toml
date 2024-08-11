@@ -5,7 +5,7 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 description = "Onoe Serika's go-to big number library for small and large-scale incremental games!"
 license = "MIT"
-include = ["out", "out/**", "default.project.json", "LICENSE", "wally.toml"]
+include = ["SerikaNum", "SerikaNum/**", "default.project.json", "LICENSE", "wally.toml"]
 exclude = ["*"]
 
 [dependencies]
