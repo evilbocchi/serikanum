@@ -1,11 +1,11 @@
 [package]
 name = "evilbocchi/serikanum"
-version = "1.0.0"
+version = "1.0.1"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 description = "Onoe Serika's go-to big number library for small and large-scale incremental games!"
 license = "MIT"
-include = ["src", "src/**", "wally.toml"]
+include = ["src", "src/**", "default.project.json", "LICENSE", "wally.toml"]
 exclude = ["*"]
 
 [dependencies]
