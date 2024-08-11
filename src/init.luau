@@ -1,6 +1,5 @@
 --!optimize 2
 --!native
---!strict
 
 local THRESHOLD = 16
 local DECIMAL_POINTS = 2
