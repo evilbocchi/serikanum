@@ -1,4 +1,21 @@
-export type Suffixes = {
+/** 
+ * The base version of an OnoeNum object, stripped of its metatables and metamethods.
+ * This type commonly appears when sending OnoeNum objects over the client-server boundary or saving it in datastores.
+ * 
+ * @example
+ * {mantissa: 5.22, exponent: 4} // This represents 5.22 * 10^4, or 52200.
+ */
+interface BaseOnoeNum {
+    /** This number primitive represents the significant digits of the entire number. */
+    mantissa: number,
+    /** This number primitive represents how much to exponentiate the mantissa by. */
+    exponent: number
+}
+
+/** An object representing a number in this library. This could be a number primitive, {@link BaseOnoeNum} or {@link OnoeNum}.*/
+type Number = BaseOnoeNum | number;
+
+type Suffixes = {
     beginning: string[],
     first: string[],
     second: string[],
@@ -8,7 +25,7 @@ export type Suffixes = {
 /**
  * Small number suffixing library.
  */
-export interface Suffixer {
+interface Suffixer {
     /**
      * Gets the suffix for the specified exponent number if the number were to be simplified to less than 1000.
      * 
@@ -36,10 +53,9 @@ export interface Suffixer {
 /**
  * Basic library for performing mathematical operations on numbers exceeding 2^1024.
  */
-export interface SerikaNum {
+declare const SerikaNum: {
     /** Create a new SerikaNum tuple from a primitive number, returning the mantissa and exponent respectively. */
-	new (number: number): LuaTuple<[number, number]>;
-
+	new: (number: number) => LuaTuple<[number, number]>,
     /**
      * Adds two SerikaNum tuples together.
      * 
@@ -100,7 +116,6 @@ export interface SerikaNum {
      * @returns Resulting SerikaNum tuple
      */
 	mod: (mantissa1: number, exponent1: number, mantissa2: number, exponent2: number) => LuaTuple<[number, number]>;
-
     /**
      * Checks if two SerikaNum tuples are equivalent.
      * 
@@ -151,7 +166,6 @@ export interface SerikaNum {
      * @returns First SerikaNum tuple is more than or equal to the second
      */
 	moreEquals: (mantissa1: number, exponent1: number, mantissa2: number, exponent2: number) => boolean;
-
     /**
      * Rounds down the SerikaNum tuple to the nearest integer.
      * This operation is unsafe for numbers beyond 2^1024.
@@ -222,7 +236,6 @@ export interface SerikaNum {
      * @returns Resulting SerikaNum tuple
      */
 	log10: (mantissa: number, exponent: number) => LuaTuple<[number, number]> | undefined;
-
     /**
      * Converts the SerikaNum tuple into a string with the specified mode.
      * If suffix is used, this method is equivalent to {@link toSuffix}.
@@ -272,7 +285,6 @@ export interface SerikaNum {
      * @returns Resulting SerikaNum tuple
      */
 	fromSingle: (single: number) => LuaTuple<[number, number]>;
-
     /**
      * In SerikaNum, addition and substraction is usually performed at up to 16 digits of precision.
      * This means that `1e+16 + 1` will simply remain as `1e+16`, while `1e+15 + 1` would change.
@@ -288,36 +300,21 @@ export interface SerikaNum {
      * @param decimalPoints Decimal points to display in strings
      */
 	changeDecimalPoints: (decimalPoints: number) => void;
-    
     /**
      * Change the default abbreviation mode used in {@link toString}. 
      * 
      * @param mode Abbreviation method to use
      */
 	changeDefaultAbbreviation: (mode: "suffix" | "scientific") => void;
-}
 
-/** 
- * The base version of an OnoeNum object, stripped of its metatables and metamethods.
- * This type commonly appears when sending OnoeNum objects over the client-server boundary or saving it in datastores.
- * 
- * @example
- * {mantissa: 5.22, exponent: 4} // This represents 5.22 * 10^4, or 52200.
- */
-export interface BaseOnoeNum {
-    /** This number primitive represents the significant digits of the entire number. */
-    mantissa: number,
-    /** This number primitive represents how much to exponentiate the mantissa by. */
-    exponent: number
-}
-
-/** An object representing a number in this library. This could be a number primitive, {@link BaseOnoeNum} or {@link OnoeNum}.*/
-export type Number = BaseOnoeNum | number;
+    OnoeNum: OnoeNumConstructor;
+    Suffixer: Suffixer;
+};
 
 /**
  * Wrapper library for SerikaNum.
  */
-export interface OnoeNum extends BaseOnoeNum {
+interface OnoeNum extends BaseOnoeNum {
     /** macro for OnoeNum + OnoeNum */
 	add(number: Number): OnoeNum;
     /** macro for OnoeNum - OnoeNum */
@@ -418,7 +415,7 @@ export interface OnoeNum extends BaseOnoeNum {
  * Static version of {@link OnoeNum}. This is only separated because roblox-ts requires it.
  * You can simply ignore the naming and treat this interface as {@link OnoeNum}.
  */
-export interface OnoeNumConstructor {
+interface OnoeNumConstructor {
     /**
      * Create a new OnoeNum object from a primitive number.
      * @param val Primitive number or a table containing mantissa and exponent entries
@@ -557,16 +554,4 @@ export interface OnoeNumConstructor {
     min: (...numbers: Number[]) => OnoeNum;
 }
 
-
-
-/** @hidden */
-export declare const Suffixer: Suffixer;
-
-/** @hidden */
-export declare const SerikaNum: SerikaNum;
-
-/** @hidden */
-export declare const OnoeNum: OnoeNumConstructor;
-
-
-
+export = SerikaNum;

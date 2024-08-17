@@ -494,8 +494,6 @@ export type BaseOnoeNum = { mantissa: number, exponent: number }
 export type Number = number | BaseOnoeNum
 export type OnoeNum = typeof(setmetatable({} :: BaseOnoeNum, OnoeNum))
 
-return {
-	SerikaNum = SerikaNum,
-	OnoeNum = OnoeNum,
-    Suffixer = Suffixer
-}
+SerikaNum.Suffixer = Suffixer
+SerikaNum.OnoeNum = OnoeNum
+return SerikaNum

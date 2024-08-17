@@ -21,19 +21,19 @@ To get started, download the library from any of the following options:
 ## Basic Usage
 Example in Lua:
 ```lua
-local OnoeNum = require(path.to.OnoeNum)
+local OnoeNum = require(path.to.SerikaNum).OnoeNum
 
 local number = OnoeNum.new(5) -- make a new object representing 5
 print(number) -- 5
 local toAdd = OnoeNum.new(250)
-toAdd = toAdd.mul(2) -- You can choose to use the provided macro functions...
+toAdd = toAdd:mul(2) -- You can choose to use the provided macro functions...
 number = number + toAdd -- Or simply use metamethods
 print(number) -- 505
 ```
 
 Example in TypeScript:
 ```ts
-import OnoeNum from "@antivivi/OnoeNum";
+import { OnoeNum } from "@antivivi/serikanum";
 
 let number = new OnoeNum(5); // make a new object representing 5
 print(number) // 5
