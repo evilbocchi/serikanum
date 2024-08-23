@@ -5,7 +5,7 @@
  * @example
  * {mantissa: 5.22, exponent: 4} // This represents 5.22 * 10^4, or 52200.
  */
-interface BaseOnoeNum {
+export interface BaseOnoeNum {
     /** This number primitive represents the significant digits of the entire number. */
     mantissa: number,
     /** This number primitive represents how much to exponentiate the mantissa by. */
@@ -13,9 +13,9 @@ interface BaseOnoeNum {
 }
 
 /** An object representing a number in this library. This could be a number primitive, {@link BaseOnoeNum} or {@link OnoeNum}.*/
-type Number = BaseOnoeNum | number;
+export type Number = BaseOnoeNum | number;
 
-type Suffixes = {
+export type Suffixes = {
     beginning: string[],
     first: string[],
     second: string[],
@@ -25,7 +25,7 @@ type Suffixes = {
 /**
  * Small number suffixing library.
  */
-interface Suffixer {
+export interface Suffixer {
     /**
      * Gets the suffix for the specified exponent number if the number were to be simplified to less than 1000.
      * 
@@ -314,7 +314,7 @@ declare const SerikaNum: {
 /**
  * Wrapper library for SerikaNum.
  */
-interface OnoeNum extends BaseOnoeNum {
+export interface OnoeNum extends BaseOnoeNum {
     /** macro for OnoeNum + OnoeNum */
 	add(number: Number): OnoeNum;
     /** macro for OnoeNum - OnoeNum */
@@ -415,15 +415,20 @@ interface OnoeNum extends BaseOnoeNum {
  * Static version of {@link OnoeNum}. This is only separated because roblox-ts requires it.
  * You can simply ignore the naming and treat this interface as {@link OnoeNum}.
  */
-interface OnoeNumConstructor {
+export interface OnoeNumConstructor {
     /**
      * Create a new OnoeNum object from a primitive number.
      * @param val Primitive number or a table containing mantissa and exponent entries
      */
 	new(val: Number): OnoeNum;
+
     /**
      * Create a new OnoeNum object from a mantissa and exponent.
      * This simply wraps the two numbers into a table and provides it the OnoeNum metatable.
+     * This could be useful for quickly creating large numbers exceeding 10^308 without having
+     * to do num1 * 10 ^ num2.
+     * @example
+     * const number = OnoeNum.fromSerika(5.23, 2359) // 5.23e2359
      * 
      * @param mantissa Mantissa of the SerikaNum
      * @param exponent Exponent of the SerikaNum
@@ -554,4 +559,4 @@ interface OnoeNumConstructor {
     min: (...numbers: Number[]) => OnoeNum;
 }
 
-export = SerikaNum;
+export default SerikaNum;

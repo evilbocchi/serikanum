@@ -34,7 +34,6 @@ function Suffixer.getSuffix(exponent: number, isUnbounded: boolean?): string?
 			thirdDivisee = math.floor((exponent - 3) / 300)
 			final = suffixes.third[thirdDivisee]
 			if final == nil then
-				maximum = exponent
 				return nil
 			end
 		end
@@ -61,7 +60,6 @@ function Suffixer.getSuffix(exponent: number, isUnbounded: boolean?): string?
 end
 
 function Suffixer.changeSuffixes(suffixes: typeof(suffixes))
-	maximum = math.huge
 	suffixes = suffixes
 end
 
@@ -74,12 +72,12 @@ local function fixMantissa(mantissa: number, exponent: number): (number, number)
 		return 0, 0
 	end
 	if exponent % 1 > 0 then
-		mantissa *= 10 ^ (exponent % 1)
+		mantissa *= math.pow(10, exponent % 1)
 		exponent = math.floor(exponent)
 	end
 
 	local exponentGain = math.floor(math.log10(math.abs(mantissa)))
-	return mantissa * (10 ^ -exponentGain), exponent + exponentGain
+	return mantissa * math.pow(10, -exponentGain), exponent + exponentGain
 end
 
 function SerikaNum.new(number: number): (number, number)
@@ -99,7 +97,7 @@ function SerikaNum.add(mantissa1: number, exponent1: number, mantissa2: number, 
 			return mantissa2, exponent2
 		end
 	end
-	mantissa2 *= (10 ^ -exponentDiff)
+	mantissa2 *= math.pow(10, -exponentDiff)
 	return fixMantissa(mantissa1 + mantissa2, exponent1)
 end
 
@@ -116,7 +114,7 @@ function SerikaNum.div(mantissa1: number, exponent1: number, mantissa2: number, 
 end
 
 function SerikaNum.pow(mantissa: number, exponent: number, power: number): (number, number)
-	return fixMantissa(mantissa ^ power, exponent * power)
+	return fixMantissa(math.pow(mantissa, power), exponent * power)
 end
 
 function SerikaNum.mod(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): (number, number)
@@ -166,7 +164,7 @@ function SerikaNum.moreEquals(mantissa1: number, exponent1: number, mantissa2: n
 end
 
 function SerikaNum.floor(mantissa: number, exponent: number): (number, number)
-	local shift = 10 ^ -exponent
+	local shift = math.pow(10, -exponent)
 	return math.floor(mantissa / shift) * shift, exponent
 end
 
@@ -175,7 +173,7 @@ function SerikaNum.round(mantissa: number, exponent: number): (number, number)
 end
 
 function SerikaNum.ceil(mantissa: number, exponent: number): (number, number)
-	local shift = 10 ^ -exponent
+	local shift = math.pow(-exponent)
 	return math.ceil(mantissa / shift) * shift, exponent
 end
 
@@ -188,7 +186,7 @@ function SerikaNum.unary(mantissa: number, exponent: number): (number, number)
 end
 
 function SerikaNum.revert(mantissa: number, exponent: number): number
-	return mantissa * 10 ^ exponent
+	return mantissa * math.pow(10, exponent)
 end
 
 function SerikaNum.log(mantissa: number, exponent: number, base: number?): (number?, number?)
@@ -208,7 +206,7 @@ local function enforceDecimalPoints(mantissa: number, exponent: number)
 	if DECIMAL_POINTS <= 0 then
 		return tostring(math.floor(SerikaNum.revert(mantissa, exponent)))
 	else
-		local shift = 10 ^ DECIMAL_POINTS
+		local shift = math.pow(10, DECIMAL_POINTS)
 		return tostring(math.floor(SerikaNum.revert(mantissa, exponent) * shift) / shift)
 	end
 end
@@ -238,8 +236,9 @@ function SerikaNum.toSuffix(mantissa: number, exponent: number): string
 end
 
 function SerikaNum.toScientific(mantissa: number, exponent: number): string
-	local shift = 10 ^ DECIMAL_POINTS
-	return tostring(math.floor(mantissa * shift) / shift) .. "e+" .. exponent
+	local shift = math.pow(10, DECIMAL_POINTS)
+	local eMantissa, eExponent = SerikaNum.new(exponent)
+	return tostring(math.floor(mantissa * shift) / shift) .. "e" .. SerikaNum.toSuffix(eMantissa, eExponent)
 end
 
 function SerikaNum.toSingle(mantissa: number, exponent: number): number
