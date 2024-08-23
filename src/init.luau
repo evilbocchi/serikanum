@@ -495,4 +495,5 @@ export type OnoeNum = typeof(setmetatable({} :: BaseOnoeNum, OnoeNum))
 
 SerikaNum.Suffixer = Suffixer
 SerikaNum.OnoeNum = OnoeNum
+SerikaNum.default = SerikaNum -- hacking to the gate
 return SerikaNum

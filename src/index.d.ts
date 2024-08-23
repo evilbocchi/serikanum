@@ -53,9 +53,9 @@ export interface Suffixer {
 /**
  * Basic library for performing mathematical operations on numbers exceeding 2^1024.
  */
-declare const SerikaNum: {
+export interface SerikaNum {
     /** Create a new SerikaNum tuple from a primitive number, returning the mantissa and exponent respectively. */
-	new: (number: number) => LuaTuple<[number, number]>,
+	new(number: number): LuaTuple<[number, number]>,
     /**
      * Adds two SerikaNum tuples together.
      * 
@@ -306,10 +306,7 @@ declare const SerikaNum: {
      * @param mode Abbreviation method to use
      */
 	changeDefaultAbbreviation: (mode: "suffix" | "scientific") => void;
-
-    OnoeNum: OnoeNumConstructor;
-    Suffixer: Suffixer;
-};
+}
 
 /**
  * Wrapper library for SerikaNum.
@@ -559,4 +556,7 @@ export interface OnoeNumConstructor {
     min: (...numbers: Number[]) => OnoeNum;
 }
 
+declare const SerikaNum: SerikaNum;
 export default SerikaNum;
+
+export declare const OnoeNum: OnoeNumConstructor;
