@@ -413,7 +413,8 @@ function OnoeNum.revert(number: BaseOnoeNum): number
 end
 
 function OnoeNum.log(number: Number, base: number?): OnoeNum?
-	local mantissa, exponent = SerikaNum.log(toSerika(number))
+	local mantissa, exponent = toSerika(number)
+    mantissa, exponent = SerikaNum.log(mantissa, exponent, base)
 	if mantissa == nil or exponent == nil then
 		return nil
 	end
