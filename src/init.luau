@@ -59,6 +59,46 @@ function Suffixer.getSuffix(exponent: number, isUnbounded: boolean?): string?
 	return final
 end
 
+function Suffixer.getSuffixExponent(suffix: string): number?
+	local exponent = 0
+	for i, v in suffixes.third do
+		local startIndex, endIndex = string.find(suffix, v)
+		if startIndex ~= nil then
+			exponent += i * 300
+			suffix = string.sub(suffix, 1, startIndex - 1)
+			break
+		end
+	end
+	local secondPresent = false
+	for i, v in suffixes.second do
+		local startIndex, endIndex = string.find(suffix, v)
+		if startIndex ~= nil then
+			exponent += i * 30
+			suffix = string.sub(suffix, 1, startIndex - 1)
+			secondPresent = true
+			break
+		end
+	end
+	for i, v in suffixes.first do
+		local startIndex, endIndex = string.find(suffix, v)
+		if startIndex ~= nil then
+			exponent += i * 3
+			suffix = string.sub(suffix, 1, startIndex - 1)
+			break
+		end
+	end
+	for i, v in suffixes.beginning do
+		local startIndex, endIndex = string.find(suffix, v)
+		if startIndex ~= nil then
+			exponent += i * 3 - 3
+			suffix = string.sub(suffix, 1, startIndex - 1)
+			break
+		end
+	end
+
+	return exponent + 3
+end
+
 function Suffixer.changeSuffixes(suffixes: typeof(suffixes))
 	suffixes = suffixes
 end
@@ -257,6 +297,32 @@ function SerikaNum.fromSingle(single: number): (number, number)
 	return tonumber(wholeMantissa .. "." .. decimalMantissa) or 0, tonumber(exponent) or 0
 end
 
+function SerikaNum.fromSuffix(str: string): (number, number)
+	local suffix = str:match("%a+")
+	if suffix == nil then
+		return SerikaNum.new(tonumber(str))
+	end
+	local mantissa = tonumber(string.sub(str, 1, string.find(str, suffix) - 1))
+	
+	local exponent = Suffixer.getSuffixExponent(suffix)
+	if mantissa ~= nil and exponent > 0 then
+		return fixMantissa(mantissa, exponent)
+	else
+		return 0, 0
+	end
+end
+
+function SerikaNum.fromString(str: string): (number, number)
+	local split = string.split(str, "e")
+	if #split > 1 and string.len(split[2]) > 0 then
+		local mantissa = tonumber(split[1])
+		local eMantissa, eExponent = SerikaNum.fromSuffix(split[2])
+		return fixMantissa(mantissa, (eMantissa * math.pow(10, eExponent)))
+	end
+	
+	return SerikaNum.fromSuffix(str)
+end
+
 function SerikaNum.changeThreshold(threshold: number)
 	THRESHOLD = threshold
 end
@@ -414,7 +480,7 @@ end
 
 function OnoeNum.log(number: Number, base: number?): OnoeNum?
 	local mantissa, exponent = toSerika(number)
-    mantissa, exponent = SerikaNum.log(mantissa, exponent, base)
+	mantissa, exponent = SerikaNum.log(mantissa, exponent, base)
 	if mantissa == nil or exponent == nil then
 		return nil
 	end
@@ -447,6 +513,16 @@ end
 
 function OnoeNum.fromSingle(single: number): OnoeNum
 	local mantissa, exponent = SerikaNum.fromSingle(single)
+	return fromSerika(mantissa, exponent)
+end
+
+function OnoeNum.fromSuffix(str: string): OnoeNum
+	local mantissa, exponent = SerikaNum.fromSuffix(str)
+	return fromSerika(mantissa, exponent)
+end
+
+function OnoeNum.fromString(str: string): OnoeNum
+	local mantissa, exponent = SerikaNum.fromString(str)
 	return fromSerika(mantissa, exponent)
 end
 
@@ -489,6 +565,11 @@ OnoeNum.lessEquals = OnoeNum.__le
 OnoeNum.mt = OnoeNum.moreThan
 OnoeNum.me = OnoeNum.moreEquals
 OnoeNum.unm = OnoeNum.unary
+
+OnoeNum.lbencode = OnoeNum.toSingle
+OnoeNum.lbdecode = OnoeNum.fromSingle
+SerikaNum.lbencode = SerikaNum.toSingle
+SerikaNum.lbdecode = SerikaNum.fromSingle
 
 export type BaseOnoeNum = { mantissa: number, exponent: number }
 export type Number = number | BaseOnoeNum

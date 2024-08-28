@@ -35,6 +35,17 @@ export interface Suffixer {
      * @param exponent Exponent number primitive
      */
     getSuffix: (exponent: number) => string | undefined;
+
+    /**
+     * Get the exponent (10^x) of the suffix.
+     * @example
+     * getSuffixExponent("UCe") // returns 306
+     * 
+     * @param suffix Suffix
+     * @returns Exponent
+     */
+    getSuffixExponent: (suffix: string) => number;
+
     /**
      * Change the suffixes to be shown when using the method {@link getSuffix}.
      * 
@@ -285,6 +296,29 @@ export interface SerikaNum {
      * @returns Resulting SerikaNum tuple
      */
 	fromSingle: (single: number) => LuaTuple<[number, number]>;
+
+    /**
+     * Converts a formatted string into a SerikaNum tuple.
+     * 
+     * @example
+     * fromSuffix("5.5UCe") // returns (5.5, 306)
+     * 
+     * @param str String to parse
+     * @returns Resulting SerikaNum tuple
+     */
+    fromSuffix: (str: string) => LuaTuple<[number, number]>;
+    /**
+     * Converts a formatted string into a SerikaNum tuple.
+     * 
+     * @example
+     * fromString("5.5UCe") // returns (5.5, 306)
+     * fromString("5.5e125") // returns (5.5, 125)
+     * 
+     * @param str String to parse
+     * @returns Resulting SerikaNum tuple
+     */
+    fromString: (str: string) => LuaTuple<[number, number]>;
+
     /**
      * In SerikaNum, addition and substraction is usually performed at up to 16 digits of precision.
      * This means that `1e+16 + 1` will simply remain as `1e+16`, while `1e+15 + 1` would change.
@@ -540,6 +574,28 @@ export interface OnoeNumConstructor {
      * @returns Resulting OnoeNum object
      */
     fromSingle: (single: number) => OnoeNum;
+    /**
+     * Converts a formatted string into an OnoeNum object.
+     * 
+     * @example
+     * fromSuffix("5.5UCe") // returns OnoeNum: 5.5UCe
+     * 
+     * @param str String to parse
+     * @returns Resulting OnoeNum object
+     */
+    fromSuffix: (str: string) => OnoeNum;
+    /**
+     * Converts a formatted string into an OnoeNum object.
+     * 
+     * @example
+     * fromString("5.5UCe") // returns OnoeNum: 5.5UCe
+     * fromString("5.5e125") // returns OnoeNum: 5.5e125
+     * 
+     * @param str String to parse
+     * @returns Resulting OnoeNum object
+     */
+    fromString: (str: string) => OnoeNum;
+
     /**
      * Returns the maximum value of all OnoeNum objects passed.
      * 
