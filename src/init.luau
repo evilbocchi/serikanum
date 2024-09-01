@@ -269,14 +269,17 @@ function SerikaNum.toSuffix(mantissa: number, exponent: number): string
 	else
 		local suffix = Suffixer.getSuffix(exponent)
 		if suffix == nil then
-			return SerikaNum.toScientific(mantissa, exponent)
+			return SerikaNum.toScientific(mantissa, exponent, false)
 		end
 		return enforceDecimalPoints(mantissa, exponent % 3) .. suffix
 	end
 end
 
-function SerikaNum.toScientific(mantissa: number, exponent: number): string
+function SerikaNum.toScientific(mantissa: number, exponent: number, shorten: boolean?): string
 	local shift = math.pow(10, DECIMAL_POINTS)
+	if shorten == false then -- idk prevent stack overflow from inf or nan
+		return tostring(math.floor(mantissa * shift) / shift) .. "e" .. exponent
+	end
 	local eMantissa, eExponent = SerikaNum.new(exponent)
 	return tostring(math.floor(mantissa * shift) / shift) .. "e" .. SerikaNum.toSuffix(eMantissa, eExponent)
 end
