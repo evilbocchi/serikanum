@@ -1,6 +1,6 @@
 {
   "name": "@antivivi/serikanum",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
   "main": "SerikaNum/init.lua",
   "scripts": {

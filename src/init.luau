@@ -172,34 +172,66 @@ function SerikaNum.equals(mantissa1: number, exponent1: number, mantissa2: numbe
 end
 
 function SerikaNum.lessThan(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-	if exponent1 == exponent2 then
+	local sign1 = math.sign(mantissa1)
+    local sign2 = math.sign(mantissa2)
+    if sign1 < sign2 then
+        return true
+    elseif sign1 > sign2 then
+        return false
+    end
+
+    if exponent1 == exponent2 then
 		return mantissa1 < mantissa2
 	else
-		return math.sign(mantissa1) * math.abs(exponent1) < math.sign(mantissa2) * math.abs(exponent2)
+		return exponent1 < exponent2
 	end
 end
 
 function SerikaNum.lessEquals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-	if exponent1 == exponent2 then
+	local sign1 = math.sign(mantissa1)
+    local sign2 = math.sign(mantissa2)
+    if sign1 < sign2 then
+        return true
+    elseif sign1 > sign2 then
+        return false
+    end
+
+    if exponent1 == exponent2 then
 		return mantissa1 <= mantissa2
 	else
-		return math.sign(mantissa1) * math.abs(exponent1) < math.sign(mantissa2) * math.abs(exponent2)
+		return exponent1 <= exponent2
 	end
 end
 
 function SerikaNum.moreThan(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-	if exponent1 == exponent2 then
+	local sign1 = math.sign(mantissa1)
+    local sign2 = math.sign(mantissa2)
+    if sign1 < sign2 then
+        return false
+    elseif sign1 > sign2 then
+        return true
+    end
+
+    if exponent1 == exponent2 then
 		return mantissa1 > mantissa2
 	else
-		return math.sign(mantissa1) * math.abs(exponent1) > math.sign(mantissa2) * math.abs(exponent2)
+		return exponent1 > exponent2
 	end
 end
 
 function SerikaNum.moreEquals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-	if exponent1 == exponent2 then
+	local sign1 = math.sign(mantissa1)
+    local sign2 = math.sign(mantissa2)
+    if sign1 < sign2 then
+        return false
+    elseif sign1 > sign2 then
+        return true
+    end
+
+    if exponent1 == exponent2 then
 		return mantissa1 >= mantissa2
 	else
-		return math.sign(mantissa1) * math.abs(exponent1) > math.sign(mantissa2) * math.abs(exponent2)
+		return exponent1 >= exponent2
 	end
 end
 
@@ -580,5 +612,6 @@ export type OnoeNum = typeof(setmetatable({} :: BaseOnoeNum, OnoeNum))
 
 SerikaNum.Suffixer = Suffixer
 SerikaNum.OnoeNum = OnoeNum
+SerikaNum.SerikaNum = SerikaNum
 SerikaNum.default = SerikaNum -- hacking to the gate
 return SerikaNum
