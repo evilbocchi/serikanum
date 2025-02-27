@@ -246,7 +246,7 @@ function SerikaNum.round(mantissa: number, exponent: number): (number, number)
 end
 
 function SerikaNum.ceil(mantissa: number, exponent: number): (number, number)
-	local shift = math.pow(-exponent)
+	local shift = math.pow(10, -exponent)
 	return math.ceil(mantissa / shift) * shift, exponent
 end
 
