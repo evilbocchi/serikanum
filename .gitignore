@@ -2,3 +2,4 @@
 /SerikaNum
 /include
 *.tsbuildinfo
+/src/Balance.luau

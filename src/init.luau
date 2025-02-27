@@ -241,7 +241,8 @@ function SerikaNum.floor(mantissa: number, exponent: number): (number, number)
 end
 
 function SerikaNum.round(mantissa: number, exponent: number): (number, number)
-	return SerikaNum.floor(SerikaNum.add(mantissa, exponent, 5, -1))
+    mantissa, exponent = SerikaNum.add(mantissa, exponent, 5, -1)
+	return SerikaNum.floor(mantissa, exponent)
 end
 
 function SerikaNum.ceil(mantissa: number, exponent: number): (number, number)
