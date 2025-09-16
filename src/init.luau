@@ -19,7 +19,7 @@ local suffixes = {
 --- Small number suffixing library.
 local Suffixer = {}
 
-function Suffixer.getSuffix(exponent: number, isUnbounded: boolean?): string?
+function Suffixer.getSuffix(exponent: number): string?
 	if exponent < 3 or exponent > HUGE then
 		return nil
 	end
@@ -614,5 +614,5 @@ export type OnoeNum = typeof(setmetatable({} :: BaseOnoeNum, OnoeNum))
 SerikaNum.Suffixer = Suffixer
 SerikaNum.OnoeNum = OnoeNum
 SerikaNum.SerikaNum = SerikaNum
-SerikaNum.default = SerikaNum -- hacking to the gate
+SerikaNum.default = SerikaNum -- Hack to make `export = ` and `export default` work equivalently in roblox-ts
 return SerikaNum

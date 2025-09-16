@@ -23,9 +23,5 @@
 		"incremental": true,
 		"tsBuildInfoFile": "SerikaNum/tsconfig.tsbuildinfo",
 		"declaration": true
-	},
-    "typedocOptions": {
-        "entryPoints": ["src/index.d.ts"],
-        "out": "docs"
-    }
+	}
 }
