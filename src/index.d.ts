@@ -618,6 +618,15 @@ export interface OnoeNumConstructor {
      * @returns Tuple containing the smallest and largest OnoeNum objects respectively
      */
     minmax: (a: Number, b: Number) => LuaTuple<[OnoeNum, OnoeNum]>;
+
+    /**
+     * Generates a random OnoeNum object between the specified minimum and maximum values, inclusive.
+     * The distribution is uniform across the range.
+     * @param min Minimum value
+     * @param max Maximum value
+     * @returns Random OnoeNum object between the specified minimum and maximum values
+     */
+    random: (min: Number, max: Number) => OnoeNum;
 }
 
 declare const SerikaNum: SerikaNum;

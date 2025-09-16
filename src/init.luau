@@ -178,10 +178,17 @@ function SerikaNum.lessThan(mantissa1: number, exponent1: number, mantissa2: num
         return false
     end
 
+    -- Both numbers have the same sign
     if exponent1 == exponent2 then
 		return mantissa1 < mantissa2
 	else
-		return exponent1 < exponent2
+		-- For positive numbers: larger exponent means larger number
+		-- For negative numbers: larger exponent means smaller number (more negative)
+		if sign1 > 0 then
+			return exponent1 < exponent2
+		else
+			return exponent1 > exponent2
+		end
 	end
 end
 
@@ -194,10 +201,17 @@ function SerikaNum.lessEquals(mantissa1: number, exponent1: number, mantissa2: n
         return false
     end
 
+    -- Both numbers have the same sign
     if exponent1 == exponent2 then
 		return mantissa1 <= mantissa2
 	else
-		return exponent1 <= exponent2
+		-- For positive numbers: larger exponent means larger number
+		-- For negative numbers: larger exponent means smaller number (more negative)
+		if sign1 > 0 then
+			return exponent1 <= exponent2
+		else
+			return exponent1 >= exponent2
+		end
 	end
 end
 
@@ -210,10 +224,17 @@ function SerikaNum.moreThan(mantissa1: number, exponent1: number, mantissa2: num
         return true
     end
 
+    -- Both numbers have the same sign
     if exponent1 == exponent2 then
 		return mantissa1 > mantissa2
 	else
-		return exponent1 > exponent2
+		-- For positive numbers: larger exponent means larger number
+		-- For negative numbers: larger exponent means smaller number (more negative)
+		if sign1 > 0 then
+			return exponent1 > exponent2
+		else
+			return exponent1 < exponent2
+		end
 	end
 end
 
@@ -226,10 +247,17 @@ function SerikaNum.moreEquals(mantissa1: number, exponent1: number, mantissa2: n
         return true
     end
 
+    -- Both numbers have the same sign
     if exponent1 == exponent2 then
 		return mantissa1 >= mantissa2
 	else
-		return exponent1 >= exponent2
+		-- For positive numbers: larger exponent means larger number
+		-- For negative numbers: larger exponent means smaller number (more negative)
+		if sign1 > 0 then
+			return exponent1 >= exponent2
+		else
+			return exponent1 <= exponent2
+		end
 	end
 end
 
@@ -271,6 +299,85 @@ end
 
 function SerikaNum.log10(mantissa: number, exponent: number): (number?, number?)
 	return SerikaNum.log(mantissa, exponent, 10)
+end
+
+function SerikaNum.random(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): (number, number)
+	-- Ensure min <= max
+	if SerikaNum.moreThan(mantissa1, exponent1, mantissa2, exponent2) then
+		mantissa1, exponent1, mantissa2, exponent2 = mantissa2, exponent2, mantissa1, exponent1
+	end
+	
+	-- Handle zero cases
+	if mantissa1 == 0 and mantissa2 == 0 then
+		return 0, 0
+	end
+	
+	-- Handle equal cases
+	if SerikaNum.equals(mantissa1, exponent1, mantissa2, exponent2) then
+		return mantissa1, exponent1
+	end
+	
+	-- If both numbers have the same exponent, interpolate between mantissas
+	if exponent1 == exponent2 then
+		local randomMantissa = mantissa1 + math.random() * (mantissa2 - mantissa1)
+		return fixMantissa(randomMantissa, exponent1)
+	end
+	
+	-- For different exponents, we need to handle the range more carefully
+	local exponentDiff = exponent2 - exponent1
+	
+	-- Check if both numbers have the same sign
+	local sign1 = math.sign(mantissa1)
+	local sign2 = math.sign(mantissa2)
+	
+	-- If signs differ, we need to handle crossing zero
+	if sign1 ~= sign2 then
+		-- Range crosses zero, so we can pick any value in the range
+		local minValue = SerikaNum.revert(mantissa1, exponent1)
+		local maxValue = SerikaNum.revert(mantissa2, exponent2)
+		if math.abs(maxValue - minValue) < 1e15 then -- Stay within safe range
+			local randomValue = minValue + math.random() * (maxValue - minValue)
+			return SerikaNum.new(randomValue)
+		end
+	end
+	
+	-- If the difference is small enough, we can work with the numbers directly
+	if exponentDiff <= 15 then -- Stay within double precision range
+		local min = SerikaNum.revert(mantissa1, exponent1)
+		local max = SerikaNum.revert(mantissa2, exponent2)
+		if math.abs(max) < 1e100 and math.abs(min) < 1e100 then -- Additional safety check
+			local randomValue = min + math.random() * (max - min)
+			return SerikaNum.new(randomValue)
+		end
+	end
+	
+	-- For very large ranges with same sign, use the logarithmic approach
+	-- But only if both numbers are positive (negative large numbers are trickier)
+	if sign1 > 0 and sign2 > 0 then
+		-- First decide which "decade" (power of 10) the result should be in
+		local randomExponent = math.random(exponent1, exponent2 - 1)
+		
+		if randomExponent == exponent1 then
+			-- If we're in the same exponent as min, start from mantissa1
+			local randomMantissa = mantissa1 + math.random() * (10 - mantissa1)
+			return fixMantissa(randomMantissa, randomExponent)
+		elseif randomExponent == exponent2 - 1 then
+			-- If we're one below max exponent, go up to mantissa2/10
+			local randomMantissa = 1 + math.random() * (mantissa2 - 1)
+			return fixMantissa(randomMantissa, randomExponent)
+		else
+			-- For middle exponents, use full range [1, 10)
+			local randomMantissa = 1 + math.random() * 9
+			return fixMantissa(randomMantissa, randomExponent)
+		end
+	end
+	
+	-- Fallback: for very large negative numbers or complex cases,
+	-- convert to regular numbers if possible
+	local min = SerikaNum.revert(mantissa1, exponent1)
+	local max = SerikaNum.revert(mantissa2, exponent2)
+	local randomValue = min + math.random() * (max - min)
+	return SerikaNum.new(randomValue)
 end
 
 local function enforceDecimalPoints(mantissa: number, exponent: number)
@@ -601,6 +708,13 @@ function OnoeNum.minmax(a: Number, b: Number): (OnoeNum, OnoeNum)
     else
         return numB, numA
     end
+end
+
+function OnoeNum.random(min: Number, max: Number): OnoeNum
+	local minMantissa, minExponent = toSerika(min)
+	local maxMantissa, maxExponent = toSerika(max)
+	local mantissa, exponent = SerikaNum.random(minMantissa, minExponent, maxMantissa, maxExponent)
+	return fromSerika(mantissa, exponent)
 end
 
 OnoeNum.add = OnoeNum.__add

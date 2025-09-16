@@ -517,4 +517,72 @@ addTest("edge: min/max operations", function()
 	assertEquals(max_val, b, "minmax should return max second")
 end)
 
+--- Random Number Generation Tests
+
+addTest("random: basic range", function()
+	local min_val = OnoeNum.new(5)
+	local max_val = OnoeNum.new(10)
+	
+	for i = 1, 10 do
+		local random_val = OnoeNum.random(min_val, max_val)
+		assertMoreEquals(random_val, min_val, "Random value should be >= min")
+		assertLessEquals(random_val, max_val, "Random value should be <= max")
+	end
+end)
+
+addTest("random: swapped parameters", function()
+	local min_val = OnoeNum.new(5)
+	local max_val = OnoeNum.new(10)
+	
+	-- Test with swapped parameters - should auto-correct
+	local random_val = OnoeNum.random(max_val, min_val)
+	assertMoreEquals(random_val, min_val, "Random value should be >= min (auto-swapped)")
+	assertLessEquals(random_val, max_val, "Random value should be <= max (auto-swapped)")
+end)
+
+addTest("random: large numbers same exponent", function()
+	local min_val = OnoeNum.new(1e15)
+	local max_val = OnoeNum.new(9e15)
+	
+	for i = 1, 5 do
+		local random_val = OnoeNum.random(min_val, max_val)
+		assertMoreEquals(random_val, min_val, "Large random value should be >= min")
+		assertLessEquals(random_val, max_val, "Large random value should be <= max")
+	end
+end)
+
+addTest("random: very large numbers different exponents", function()
+	local min_val = OnoeNum.fromString("1e100")
+	local max_val = OnoeNum.fromString("1e200")
+	
+	for i = 1, 5 do
+		local random_val = OnoeNum.random(min_val, max_val)
+		assertMoreEquals(random_val, min_val, "Very large random value should be >= min")
+		assertLessEquals(random_val, max_val, "Very large random value should be <= max")
+	end
+end)
+
+addTest("random: including negative numbers", function()
+	local min_val = OnoeNum.new(-10)
+	local max_val = OnoeNum.new(10)
+	
+	for i = 1, 10 do
+		local random_val = OnoeNum.random(min_val, max_val)
+		assertMoreEquals(random_val, min_val, "Random value should be >= min (negative)")
+		assertLessEquals(random_val, max_val, "Random value should be <= max (negative)")
+	end
+end)
+
+addTest("random: zero range", function()
+	local val = OnoeNum.new(42)
+	local random_val = OnoeNum.random(val, val)
+	assertEquals(random_val, val, "Random with same min and max should return that value")
+end)
+
+addTest("random: zero values", function()
+	local zero = OnoeNum.new(0)
+	local random_val = OnoeNum.random(zero, zero)
+	assertEquals(random_val, zero, "Random with zero range should return zero")
+end)
+
 runTests()
