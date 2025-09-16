@@ -610,6 +610,14 @@ export interface OnoeNumConstructor {
      * @returns Smallest OnoeNum object
      */
     min: (...numbers: Number[]) => OnoeNum;
+
+    /**
+     * Returns the minimum and maximum values of the two OnoeNum objects passed.
+     * @param a First OnoeNum object
+     * @param b Second OnoeNum object
+     * @returns Tuple containing the smallest and largest OnoeNum objects respectively
+     */
+    minmax: (a: Number, b: Number) => LuaTuple<[OnoeNum, OnoeNum]>;
 }
 
 declare const SerikaNum: SerikaNum;

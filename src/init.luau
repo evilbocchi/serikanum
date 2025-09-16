@@ -13,8 +13,6 @@ local suffixes = {
 	third = { "Ce", "Dce", "Tce", "Qdce", "Qnce", "Sxce", "Spce", "Occe", "Noce" },
 }
 
-
-
 --- @class Suffixer
 --- Small number suffixing library.
 local Suffixer = {}
@@ -584,6 +582,16 @@ function OnoeNum.min(...: { Number }): OnoeNum
 		end
 	end
 	return max
+end
+
+function OnoeNum.minmax(a: Number, b: Number): (OnoeNum, OnoeNum)
+    local numA = OnoeNum.new(a)
+    local numB = OnoeNum.new(b)
+    if numA:lessThan(numB) then
+        return numA, numB
+    else
+        return numB, numA
+    end
 end
 
 OnoeNum.add = OnoeNum.__add
