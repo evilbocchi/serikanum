@@ -166,7 +166,7 @@ function SerikaNum.mod(mantissa1: number, exponent1: number, mantissa2: number, 
 end
 
 function SerikaNum.equals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-	return mantissa1 == mantissa2 and exponent1 == exponent2
+	return exponent1 == exponent2 and math.abs(mantissa1 - mantissa2) < 1e-7
 end
 
 function SerikaNum.lessThan(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
@@ -275,10 +275,10 @@ end
 
 local function enforceDecimalPoints(mantissa: number, exponent: number)
 	if DECIMAL_POINTS <= 0 then
-		return tostring(math.floor(SerikaNum.revert(mantissa, exponent)))
+		return tostring(math.round(SerikaNum.revert(mantissa, exponent)))
 	else
 		local shift = math.pow(10, DECIMAL_POINTS)
-		return tostring(math.floor(SerikaNum.revert(mantissa, exponent) * shift) / shift)
+		return tostring(math.round(SerikaNum.revert(mantissa, exponent) * shift) / shift)
 	end
 end
 
@@ -415,54 +415,63 @@ function OnoeNum.fromSerika(mantissa: number, exponent: number): OnoeNum
 	return fromSerika(SerikaNum.fixMantissa(mantissa, exponent))
 end
 
-function OnoeNum.__add(self: OnoeNum, number: Number): OnoeNum
+function OnoeNum.__add(self: Number, number: Number): OnoeNum
+    local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return fromSerika(SerikaNum.add(self.mantissa, self.exponent, mantissa, exponent))
+	return fromSerika(SerikaNum.add(selfMantissa, selfExponent, mantissa, exponent))
 end
 
-function OnoeNum.__sub(self: OnoeNum, number: Number): OnoeNum
+function OnoeNum.__sub(self: Number, number: Number): OnoeNum
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return fromSerika(SerikaNum.sub(self.mantissa, self.exponent, mantissa, exponent))
+	return fromSerika(SerikaNum.sub(selfMantissa, selfExponent, mantissa, exponent))
 end
 
-function OnoeNum.__mul(self: OnoeNum, number: Number): OnoeNum
+function OnoeNum.__mul(self: Number, number: Number): OnoeNum
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return fromSerika(SerikaNum.mul(self.mantissa, self.exponent, mantissa, exponent))
+	return fromSerika(SerikaNum.mul(selfMantissa, selfExponent, mantissa, exponent))
 end
 
-function OnoeNum.__div(self: OnoeNum, number: Number): OnoeNum
+function OnoeNum.__div(self: Number, number: Number): OnoeNum
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return fromSerika(SerikaNum.div(self.mantissa, self.exponent, mantissa, exponent))
+	return fromSerika(SerikaNum.div(selfMantissa, selfExponent, mantissa, exponent))
 end
 
-function OnoeNum.__pow(self: OnoeNum, number: Number): OnoeNum
+function OnoeNum.__pow(self: Number, number: Number): OnoeNum
+	local selfMantissa, selfExponent = toSerika(self)
 	return fromSerika(
 		SerikaNum.pow(
-			self.mantissa,
-			self.exponent,
+			selfMantissa,
+			selfExponent,
 			typeof(number) == "number" and number or OnoeNum.revert(number :: BaseOnoeNum)
 		)
 	)
 end
 
-function OnoeNum.__mod(self: OnoeNum, number: Number): OnoeNum
+function OnoeNum.__mod(self: Number, number: Number): OnoeNum
+    local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return fromSerika(SerikaNum.mod(self.mantissa, self.exponent, mantissa, exponent))
+	return fromSerika(SerikaNum.mod(selfMantissa, selfExponent, mantissa, exponent))
 end
 
-function OnoeNum.__eq(self: OnoeNum, number: Number): boolean
+function OnoeNum.__eq(self: Number, number: Number): boolean
+    local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return SerikaNum.equals(self.mantissa, self.exponent, mantissa, exponent)
+	return SerikaNum.equals(selfMantissa, selfExponent, mantissa, exponent)
 end
 
-function OnoeNum.__lt(self: OnoeNum, number: Number): boolean
+function OnoeNum.__lt(self: Number, number: Number): boolean
+    local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return SerikaNum.lessThan(self.mantissa, self.exponent, mantissa, exponent)
+	return SerikaNum.lessThan(selfMantissa, selfExponent, mantissa, exponent)
 end
 
-function OnoeNum.__le(self: OnoeNum, number: Number): boolean
+function OnoeNum.__le(self: Number, number: Number): boolean
+    local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
-	return SerikaNum.lessEquals(self.mantissa, self.exponent, mantissa, exponent)
+	return SerikaNum.lessEquals(selfMantissa, selfExponent, mantissa, exponent)
 end
 
 function OnoeNum.__concat(self: OnoeNum, str: string): string
@@ -609,7 +618,8 @@ OnoeNum.lessEquals = OnoeNum.__le
 OnoeNum.mt = OnoeNum.moreThan
 OnoeNum.me = OnoeNum.moreEquals
 OnoeNum.unm = OnoeNum.unary
-
+OnoeNum.__unm = OnoeNum.unary
+OnoeNum.toSerika = toSerika
 OnoeNum.lbencode = OnoeNum.toSingle
 OnoeNum.lbdecode = OnoeNum.fromSingle
 SerikaNum.lbencode = SerikaNum.toSingle

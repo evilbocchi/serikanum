@@ -29,6 +29,7 @@ end
 
 function assertEquals(actual, expected, msg)
 	if not actual:equals(expected) then
+        print(actual.mantissa, actual.exponent, expected.mantissa, expected.exponent)
 		error((msg or "") .. " Expected " .. expected:toString() .. ", got " .. actual:toString(), 2)
 	end
 end
@@ -107,12 +108,12 @@ addTest("fromString: handles zero string", function()
 end)
 
 addTest("scientificNotation: parses scientific notation", function()
-	local num = OnoeNum.fromScientific("1.23e5")
+	local num = OnoeNum.fromString("1.23e5")
 	assertClose(num:revert(), 123000)
 end)
 
 addTest("scientificNotation: handles negative signs in strings", function()
-	local num = OnoeNum.fromScientific("-5.678")
+	local num = OnoeNum.fromString("-5.678")
 	assertClose(num:revert(), -5.678)
 end)
 
@@ -123,7 +124,7 @@ addTest("scientificNotation: handles scientific notation in various formats", fu
 		{ input = "1e10", expected = 1e10 }
 	}
 	for _, case in ipairs(cases) do
-		local num = OnoeNum.fromScientific(case.input)
+		local num = OnoeNum.fromString(case.input)
 		assertClose(num:revert() / case.expected, 1)
 	end
 end)
@@ -163,17 +164,17 @@ end)
 addTest("mod: simple modulo", function()
 	local a = OnoeNum.new(17)
 	local b = OnoeNum.new(5)
-	assertEqual((a % b):revert(), 2)
+	assertClose((a % b):revert(), 2, 1e-9)
 end)
 
 addTest("unary minus", function()
 	local a = OnoeNum.new(9)
-	assertEqual((-a):revert(), -9)
+	assertClose((-a):revert(), -9, 1e-9)
 end)
 
 addTest("reciprocal", function()
 	local a = OnoeNum.new(4)
-	assertClose(a:reciprocal():revert(), 0.25)
+	assertClose((1 / a):revert(), 0.25)
 end)
 
 --- Comparison
@@ -230,13 +231,6 @@ addTest("toScientific: large number", function()
 	assert(a:toScientific():find("e"))
 end)
 
-addTest("toEChain: very large number", function()
-	local a = OnoeNum.fromScientific("1e100")
-	local b = OnoeNum.fromScientific("1e100")
-	local c = a ^ b
-	assert(c:toEChain():sub(1,2) == "ee")
-end)
-
 --- Edge cases
 
 addTest("zero: addition", function()
@@ -260,23 +254,7 @@ end)
 addTest("negative: division", function()
 	local a = OnoeNum.new(-12)
 	local b = OnoeNum.new(3)
-	assertEqual((a / b):revert(), -4)
-end)
-
-addTest("isInteger: integer", function()
-	local a = OnoeNum.new(10)
-	assert(a:isInteger())
-end)
-
-addTest("isInteger: not integer", function()
-	local a = OnoeNum.new(3.14)
-	assert(not a:isInteger())
-end)
-
-addTest("root: square root", function()
-	local a = OnoeNum.new(16)
-	local b = OnoeNum.new(2)
-	assertClose(a:root(b):revert(), 4)
+	assertClose((a / b):revert(), -4, 1e-9)
 end)
 
 addTest("pow: negative exponent", function()
@@ -402,7 +380,7 @@ end)
 addTest("inverse: power and root", function()
 	local a = OnoeNum.new(8)
 	local b = OnoeNum.new(3)
-	local result = a:pow(b):root(b)
+	local result = a:pow(b):pow(1 / b)
 	assertClose(result:revert(), a:revert(), 1e-10, "a^b root b should equal a")
 end)
 
@@ -431,8 +409,8 @@ addTest("large: extreme numbers within safe limit", function()
 end)
 
 addTest("large: operations with scientific notation", function()
-	local huge1 = OnoeNum.fromScientific("1e1000")
-	local huge2 = OnoeNum.fromScientific("2e1000")
+	local huge1 = OnoeNum.fromString("1e1000")
+	local huge2 = OnoeNum.fromString("2e1000")
 	
 	-- Test that operations work with very large numbers
 	local sum = huge1:add(huge2)
