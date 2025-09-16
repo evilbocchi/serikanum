@@ -4,6 +4,7 @@
   "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
   "main": "SerikaNum/init.lua",
   "scripts": {
+    "lint": "npx eslint --fix",
     "build": "rbxtsc",
     "watch": "rbxtsc -w",
     "docs": "npx typedoc",
@@ -36,15 +37,17 @@
     "@typescript-eslint/eslint-plugin": "^8.44.0",
     "@typescript-eslint/parser": "^8.44.0",
     "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-roblox-ts": "^1.1.0",
+    "rbx-lune": "^1.0.0",
     "roblox-ts": "^3.0.0",
+    "rojo": "^1.0.2",
     "typedoc": "^0.28.13",
     "typedoc-material-theme": "^1.4.0",
     "typedoc-plugin-extras": "^4.0.1",
     "typedoc-plugin-missing-exports": "^4.1.0",
-    "typescript": "^5.5.3"
-  },
-  "dependencies": {
-    "rbx-lune": "^1.0.0"
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.44.0"
   }
 }

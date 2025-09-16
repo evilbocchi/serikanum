@@ -16,7 +16,6 @@ export default [
                 useJSXTextNode: true,
                 ecmaVersion: 2018,
                 sourceType: "module",
-                project: true,
             },
         },
         plugins: {
