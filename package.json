@@ -1,6 +1,6 @@
 {
-  "name": "@antivivi/serikanum",
-  "version": "1.4.6",
+  "name": "@rbxts/serikanum",
+  "version": "1.5.0",
   "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
   "main": "SerikaNum/init.lua",
   "scripts": {
@@ -10,7 +10,8 @@
     "docs": "npx typedoc",
     "benchmark": "npx lune run benchmark",
     "test": "npx lune run test",
-    "pub": "npm run build & npm run docs & npm publish & wally publish"
+    "prepublishOnly": "npm run build & npm run docs",
+    "postpublish": "wally publish"
   },
   "repository": {
     "type": "git",

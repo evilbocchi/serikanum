@@ -16,7 +16,7 @@ To get started, download the library from any of the following options:
 
 1. [Roblox Toolbox](https://create.roblox.com/store/asset/18720686231/SerikaNum)
 2. [Wally](https://wally.run/package/evilbocchi/serikanum)
-3. [npm for roblox-ts](https://www.npmjs.com/package/@antivivi/serikanum)
+3. [npm for roblox-ts](https://www.npmjs.com/package/@rbxts/serikanum)
 
 ## Basic Usage
 Example in Lua:
@@ -33,7 +33,7 @@ print(number) -- 505
 
 Example in TypeScript:
 ```ts
-import { OnoeNum } from "@antivivi/serikanum";
+import { OnoeNum } from "@rbxts/serikanum";
 
 let number = new OnoeNum(5); // make a new object representing 5
 print(number) // 5
