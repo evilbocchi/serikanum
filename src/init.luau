@@ -26,8 +26,8 @@ function Suffixer.getSuffix(exponent: number): string?
 	if firstDivisee < 4 then
 		final = suffixes.beginning[firstDivisee]
 	else
-		local secondDivisee: number?
-		local thirdDivisee: number?
+		local secondDivisee: number
+		local thirdDivisee: number
 		if exponent > 302 then
 			thirdDivisee = math.floor((exponent - 3) / 300)
 			final = suffixes.third[thirdDivisee]
@@ -441,9 +441,17 @@ end
 function SerikaNum.fromSuffix(str: string): (number, number)
 	local suffix = str:match("%a+")
 	if suffix == nil then
-		return SerikaNum.new(tonumber(str))
+        local parsed = tonumber(str)
+        if parsed == nil then
+            return 0, 0
+        end
+		return SerikaNum.new(parsed)
 	end
-	local mantissa = tonumber(string.sub(str, 1, string.find(str, suffix) - 1))
+    local found = string.find(str, suffix)
+    if found == nil then
+        return 0, 0
+    end
+	local mantissa = tonumber(string.sub(str, 1, found - 1))
 	
 	local exponent = Suffixer.getSuffixExponent(suffix)
 	if mantissa ~= nil and exponent > 0 then
@@ -692,12 +700,12 @@ function OnoeNum.min(...: { Number }): OnoeNum
 	local numbers = { ... }
 	local max: OnoeNum? = nil
 	for _, number in numbers do
-		local number = OnoeNum.new(number)
-		if max == nil or number:lessThan(max) then
-			max = number
+		local converted = OnoeNum.new(number)
+		if max == nil or converted:lessThan(max) then
+			max = converted
 		end
 	end
-	return max
+	return max :: OnoeNum
 end
 
 function OnoeNum.minmax(a: Number, b: Number): (OnoeNum, OnoeNum)

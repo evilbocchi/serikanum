@@ -8,8 +8,8 @@
     "build": "rbxtsc",
     "watch": "rbxtsc -w",
     "docs": "npx typedoc",
-    "benchmark": "npx lune run benchmark.luau",
-    "test": "npx lune run testRunner.luau",
+    "benchmark": "npx lune run benchmark",
+    "test": "npx lune run test",
     "pub": "npm run build & npm run docs & npm publish & wally publish"
   },
   "repository": {

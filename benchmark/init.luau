@@ -1,11 +1,13 @@
 --!optimize 2
 --!native
 
--- Simplified benchmark tests for SerikaNum vs number vs OnoeNum performance
+-- Comprehensive benchmark tests for SerikaNum vs number vs OnoeNum vs EternityNum vs InfiniteMath performance
 -- This script reproduces the performance comparison chart results
 
 local SerikaNum = require("./SerikaNum")
 local OnoeNum = SerikaNum.OnoeNum
+local EternityNum = require("./benchmark/EternityNum")
+local InfiniteMath = require("./benchmark/InfiniteMath")
 
 -- Benchmark configuration
 local ITERATIONS = 200000 -- 200K operations as mentioned in the chart
@@ -34,6 +36,24 @@ for category, numbers in testNumbers do
 	testOnoeNum[category] = {}
 	for i, num in numbers do
 		testOnoeNum[category][i] = OnoeNum.new(num)
+	end
+end
+
+-- Convert test numbers to EternityNum format
+local testEternityNum = {}
+for category, numbers in testNumbers do
+	testEternityNum[category] = {}
+	for i, num in numbers do
+		testEternityNum[category][i] = EternityNum.fromNumber(num)
+	end
+end
+
+-- Convert test numbers to InfiniteMath format
+local testInfiniteMath = {}
+for category, numbers in testNumbers do
+	testInfiniteMath[category] = {}
+	for i, num in numbers do
+		testInfiniteMath[category][i] = InfiniteMath.new(num)
 	end
 end
 
@@ -109,10 +129,24 @@ local function runAllBenchmarks()
 		local _ = oa + ob
 	end, ITERATIONS)
 	
+	local ea = testEternityNum.medium[1]
+	local eb = testEternityNum.medium[2]
+	local eternityTime, eternityOps = benchmark("EternityNum", function()
+		local _ = EternityNum.add(ea, eb)
+	end, ITERATIONS)
+	
+	local ia = testInfiniteMath.medium[1]
+	local ib = testInfiniteMath.medium[2]
+	local infiniteTime, infiniteOps = benchmark("InfiniteMath", function()
+		local _ = ia + ib
+	end, ITERATIONS)
+	
 	allResults.addition = {
 		number = { time = numberTime, ops = numberOps },
 		serika = { time = serikaTime, ops = serikaOps },
-		onoe = { time = onoeTime, ops = onoeOps }
+		onoe = { time = onoeTime, ops = onoeOps },
+		eternity = { time = eternityTime, ops = eternityOps },
+		infinite = { time = infiniteTime, ops = infiniteOps }
 	}
 	
 	-- Multiplication benchmarks
@@ -130,10 +164,20 @@ local function runAllBenchmarks()
 		local _ = oa * ob
 	end, ITERATIONS)
 	
+	eternityTime, eternityOps = benchmark("EternityNum", function()
+		local _ = EternityNum.mul(ea, eb)
+	end, ITERATIONS)
+	
+	infiniteTime, infiniteOps = benchmark("InfiniteMath", function()
+		local _ = ia * ib
+	end, ITERATIONS)
+	
 	allResults.multiplication = {
 		number = { time = numberTime, ops = numberOps },
 		serika = { time = serikaTime, ops = serikaOps },
-		onoe = { time = onoeTime, ops = onoeOps }
+		onoe = { time = onoeTime, ops = onoeOps },
+		eternity = { time = eternityTime, ops = eternityOps },
+		infinite = { time = infiniteTime, ops = infiniteOps }
 	}
 	
 	-- Exponentiation benchmarks
@@ -155,10 +199,22 @@ local function runAllBenchmarks()
 		local _ = oa_small ^ power
 	end, ITERATIONS)
 	
+	local ea_small = testEternityNum.small[1]
+	eternityTime, eternityOps = benchmark("EternityNum", function()
+		local _ = EternityNum.pow(ea_small, power)
+	end, ITERATIONS)
+	
+	local ia_small = testInfiniteMath.small[1]
+	infiniteTime, infiniteOps = benchmark("InfiniteMath", function()
+		local _ = ia_small ^ power
+	end, ITERATIONS)
+	
 	allResults.exponentiation = {
 		number = { time = numberTime, ops = numberOps },
 		serika = { time = serikaTime, ops = serikaOps },
-		onoe = { time = onoeTime, ops = onoeOps }
+		onoe = { time = onoeTime, ops = onoeOps },
+		eternity = { time = eternityTime, ops = eternityOps },
+		infinite = { time = infiniteTime, ops = infiniteOps }
 	}
 	
 	-- Comparison benchmarks
@@ -182,10 +238,24 @@ local function runAllBenchmarks()
 		local _ = oa == ob
 	end, ITERATIONS)
 	
+	eternityTime, eternityOps = benchmark("EternityNum", function()
+		local _ = EternityNum.le(ea, eb)
+		local _ = EternityNum.me(ea, eb)
+		local _ = EternityNum.eq(ea, eb)
+	end, ITERATIONS)
+	
+	infiniteTime, infiniteOps = benchmark("InfiniteMath", function()
+		local _ = ia < ib
+		local _ = ia > ib
+		local _ = ia == ib
+	end, ITERATIONS)
+	
 	allResults.comparison = {
 		number = { time = numberTime, ops = numberOps },
 		serika = { time = serikaTime, ops = serikaOps },
-		onoe = { time = onoeTime, ops = onoeOps }
+		onoe = { time = onoeTime, ops = onoeOps },
+		eternity = { time = eternityTime, ops = eternityOps },
+		infinite = { time = infiniteTime, ops = infiniteOps }
 	}
 	
 	-- Analysis and summary
@@ -208,20 +278,30 @@ local function runAllBenchmarks()
 		local baselineOps = results.number.ops
 		local serikaOps = results.serika.ops
 		local onoeOps = results.onoe.ops
+		local eternityOps = results.eternity.ops
+		local infiniteOps = results.infinite.ops
 		
 		print(string.format("SerikaNum vs number: %s", calculateSpeedRatio(serikaOps, baselineOps)))
 		print(string.format("OnoeNum vs number: %s", calculateSpeedRatio(onoeOps, baselineOps)))
+		print(string.format("EternityNum vs number: %s", calculateSpeedRatio(eternityOps, baselineOps)))
+		print(string.format("InfiniteMath vs number: %s", calculateSpeedRatio(infiniteOps, baselineOps)))
 		print(string.format("SerikaNum vs OnoeNum: %s", calculateSpeedRatio(serikaOps, onoeOps)))
+		print(string.format("SerikaNum vs EternityNum: %s", calculateSpeedRatio(serikaOps, eternityOps)))
+		print(string.format("SerikaNum vs InfiniteMath: %s", calculateSpeedRatio(serikaOps, infiniteOps)))
 		
 		-- Calculate approximate ms/200K operations as shown in chart
 		local numberMs = (results.number.time * ITERATIONS) / 1000000
 		local serikaMs = (results.serika.time * ITERATIONS) / 1000000
 		local onoeMs = (results.onoe.time * ITERATIONS) / 1000000
+		local eternityMs = (results.eternity.time * ITERATIONS) / 1000000
+		local infiniteMs = (results.infinite.time * ITERATIONS) / 1000000
 		
 		print(string.format("\nTime for %dK operations:", ITERATIONS / 1000))
-		print(string.format("number:    %.1f ms", numberMs))
-		print(string.format("SerikaNum: %.1f ms", serikaMs))
-		print(string.format("OnoeNum:   %.1f ms", onoeMs))
+		print(string.format("number:       %.1f ms", numberMs))
+		print(string.format("SerikaNum:    %.1f ms", serikaMs))
+		print(string.format("OnoeNum:      %.1f ms", onoeMs))
+		print(string.format("EternityNum:  %.1f ms", eternityMs))
+		print(string.format("InfiniteMath: %.1f ms", infiniteMs))
 	end
 	
 	-- Summary table matching the chart format
@@ -229,15 +309,17 @@ local function runAllBenchmarks()
 	print("📋 SUMMARY TABLE (ms/200K operations)")
 	print(string.rep("=", 60))
 	
-	print(string.format("%-15s | %-10s | %-10s | %-10s", "Operation", "number", "SerikaNum", "OnoeNum"))
-	print(string.rep("-", 55))
+	print(string.format("%-15s | %-8s | %-10s | %-10s | %-12s | %-12s", "Operation", "number", "SerikaNum", "OnoeNum", "EternityNum", "InfiniteMath"))
+	print(string.rep("-", 90))
 	
 	for operation, results in allResults do
 		local numberMs = (results.number.time * ITERATIONS) / 1000000
 		local serikaMs = (results.serika.time * ITERATIONS) / 1000000
 		local onoeMs = (results.onoe.time * ITERATIONS) / 1000000
+		local eternityMs = (results.eternity.time * ITERATIONS) / 1000000
+		local infiniteMs = (results.infinite.time * ITERATIONS) / 1000000
 		
-		print(string.format("%-15s | %-10.1f | %-10.1f | %-10.1f", operation, numberMs, serikaMs, onoeMs))
+		print(string.format("%-15s | %-8.1f | %-10.1f | %-10.1f | %-12.1f | %-12.1f", operation, numberMs, serikaMs, onoeMs, eternityMs, infiniteMs))
 	end
 	
 	print("\n✅ Benchmark completed successfully!")
