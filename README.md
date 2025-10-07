@@ -1,7 +1,3 @@
-<p align="center">
-  <img width="350" alt="SerikaNum logo" src="assets/logo.png"></img>
-</p>
-
 # SerikaNum
 
 Onoe Serika's go-to big number library for small and large-scale incremental games! 
