@@ -134,9 +134,21 @@ export interface SerikaNum {
      * @param exponent1 First SerikaNum tuple's exponent
      * @param mantissa2 Second SerikaNum tuple's mantissa
      * @param exponent2 Second SerikaNum tuple's exponent
+     * @param tolerance Optional tolerance for floating point comparison (defaults to 1e-7)
      * @returns Equality of the two SerikaNum tuples
      */
-    equals: (mantissa1: number, exponent1: number, mantissa2: number, exponent2: number) => boolean;
+    equals: (mantissa1: number, exponent1: number, mantissa2: number, exponent2: number, tolerance?: number) => boolean;
+    /**
+     * Checks if two SerikaNum tuples are exactly the same.
+     * This does not account for floating point precision errors.
+     *
+     * @param mantissa1 First SerikaNum tuple's mantissa
+     * @param exponent1 First SerikaNum tuple's exponent
+     * @param mantissa2 Second SerikaNum tuple's mantissa
+     * @param exponent2 Second SerikaNum tuple's exponent
+     * @returns Exact equality of the two SerikaNum tuples
+     */
+    equalsExact: (mantissa1: number, exponent1: number, mantissa2: number, exponent2: number) => boolean;
     /**
      * Checks if the first SerikaNum tuple is less than the second.
      *

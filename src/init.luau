@@ -165,8 +165,12 @@ function SerikaNum.mod(mantissa1: number, exponent1: number, mantissa2: number, 
 	return SerikaNum.sub(mantissa1, exponent1, SerikaNum.mul(mantissa2, exponent2, dividedMantissa, dividedExponent))
 end
 
-function SerikaNum.equals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-	return exponent1 == exponent2 and math.abs(mantissa1 - mantissa2) < 1e-7
+function SerikaNum.equals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number, tolerance: number?): boolean
+	return exponent1 == exponent2 and math.abs(mantissa1 - mantissa2) < (tolerance or 1e-7)
+end
+
+function SerikaNum.equalsExact(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
+    return exponent1 == exponent2 and mantissa1 == mantissa2
 end
 
 function SerikaNum.lessThan(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
