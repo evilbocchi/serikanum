@@ -117,6 +117,15 @@ export interface SerikaNum {
      */
     pow: (mantissa: number, exponent: number, power: number) => LuaTuple<[number, number]>;
     /**
+     * Calculates the nth root of the SerikaNum tuple.
+     *
+     * @param mantissa SerikaNum tuple's mantissa
+     * @param exponent SerikaNum tuple's exponent
+     * @param root Root to calculate (e.g., 2 for square root, 3 for cube root)
+     * @returns Resulting SerikaNum tuple
+     */
+    root: (mantissa: number, exponent: number, root: number) => LuaTuple<[number, number]>;
+    /**
      * Gets the remainder of the first SerikaNum tuple divided by the second.
      * This is a slightly expensive operation.
      *
@@ -419,6 +428,12 @@ export interface OnoeNum extends BaseOnoeNum {
      */
     reciprocal(): OnoeNum;
     /**
+     * Calculates the nth root of the OnoeNum object.
+     *
+     * @param root Root to calculate (e.g., 2 for square root, 3 for cube root)
+     */
+    root(root: number): OnoeNum;
+    /**
      * Reverts the OnoeNum back to a primitive number.
      * For numbers beyond 2^1024, this will return `math.huge`.
      */
@@ -537,6 +552,14 @@ export interface OnoeNumConstructor {
      * @returns Reciprocal of the OnoeNum object
      */
     reciprocal: (number: Number) => OnoeNum;
+    /**
+     * Calculates the nth root of the OnoeNum object.
+     *
+     * @param number OnoeNum object
+     * @param root Root to calculate (e.g., 2 for square root, 3 for cube root)
+     * @returns Resulting OnoeNum object
+     */
+    root: (number: Number, root: number) => OnoeNum;
     /**
      * Reverts the OnoeNum back to a primitive number.
      * For numbers beyond 2^1024, this will return `math.huge`.

@@ -155,6 +155,10 @@ function SerikaNum.pow(mantissa: number, exponent: number, power: number): (numb
 	return fixMantissa(math.pow(mantissa, power), exponent * power)
 end
 
+function SerikaNum.root(mantissa: number, exponent: number, root: number): (number, number)
+	return SerikaNum.pow(mantissa, exponent, 1 / root)
+end
+
 function SerikaNum.mod(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): (number, number)
 	local dividedMantissa, dividedExponent = SerikaNum.div(mantissa1, exponent1, mantissa2, exponent2)
 	if math.sign(mantissa1) == 1 then
@@ -643,6 +647,11 @@ end
 function OnoeNum.reciprocal(number: Number): OnoeNum
 	local mantissa, exponent = toSerika(number)
 	return fromSerika(SerikaNum.reciprocal(mantissa, exponent))
+end
+
+function OnoeNum.root(number: Number, root: number): OnoeNum
+	local mantissa, exponent = toSerika(number)
+	return fromSerika(SerikaNum.root(mantissa, exponent, root))
 end
 
 function OnoeNum.revert(number: BaseOnoeNum): number

@@ -222,6 +222,84 @@ addTest("reciprocal: multiplication by reciprocal equals 1", function()
 	assertClose(result:revert(), 1, 1e-9, "number times its reciprocal should equal 1")
 end)
 
+addTest("root: square root", function()
+	local a = OnoeNum.new(16)
+	local result = OnoeNum.root(a, 2)
+	assertClose(result:revert(), 4, 1e-9, "square root of 16 should be 4")
+end)
+
+addTest("root: cube root", function()
+	local a = OnoeNum.new(27)
+	local result = OnoeNum.root(a, 3)
+	assertClose(result:revert(), 3, 1e-9, "cube root of 27 should be 3")
+end)
+
+addTest("root: fourth root", function()
+	local a = OnoeNum.new(81)
+	local result = OnoeNum.root(a, 4)
+	assertClose(result:revert(), 3, 1e-9, "fourth root of 81 should be 3")
+end)
+
+addTest("root: square root of large number", function()
+	local a = OnoeNum.new(1e10)
+	local result = OnoeNum.root(a, 2)
+	assertClose(result:revert(), 1e5, 1e-4, "square root of 1e10 should be 1e5")
+end)
+
+addTest("root: cube root of very large number", function()
+	local a = OnoeNum.fromString("1e300")
+	local result = OnoeNum.root(a, 3)
+	local expected = OnoeNum.fromString("1e100")
+	assertEquals(result, expected, "cube root of 1e300 should be 1e100")
+end)
+
+addTest("root: root then power equals original", function()
+	local a = OnoeNum.new(64)
+	local root_val = 3
+	local result = OnoeNum.root(a, root_val):pow(root_val)
+	assertClose(result:revert(), a:revert(), 1e-9, "taking root then raising to that power should equal original")
+end)
+
+addTest("root: power then root equals original", function()
+	local a = OnoeNum.new(5)
+	local power_val = 4
+	local result = a:pow(power_val):root(power_val)
+	assertClose(result:revert(), a:revert(), 1e-9, "raising to power then taking that root should equal original")
+end)
+
+addTest("root: square root of 2", function()
+	local a = OnoeNum.new(2)
+	local result = OnoeNum.root(a, 2)
+	assertClose(result:revert(), math.sqrt(2), 1e-9, "square root of 2 should match math.sqrt(2)")
+end)
+
+addTest("root: root of 1 is 1", function()
+	local a = OnoeNum.new(1)
+	local result = OnoeNum.root(a, 5)
+	assertClose(result:revert(), 1, 1e-9, "any root of 1 should be 1")
+end)
+
+addTest("root: relationship with pow", function()
+	local a = OnoeNum.new(8)
+	local root_result = OnoeNum.root(a, 3)
+	local pow_result = a:pow(1/3)
+	assertClose(root_result:revert(), pow_result:revert(), 1e-9, "root(x, n) should equal pow(x, 1/n)")
+end)
+
+addTest("root: negative base with odd root", function()
+	-- Note: This might not work perfectly with floating point, but we can test the concept
+	local a = OnoeNum.new(-8)
+	local result = OnoeNum.root(a, 3)
+	-- cube root of -8 should be -2
+	assertClose(result:revert(), -2, 1e-9, "cube root of -8 should be -2")
+end)
+
+addTest("root: fractional results", function()
+	local a = OnoeNum.new(10)
+	local result = OnoeNum.root(a, 2)
+	assertClose(result:revert(), math.sqrt(10), 1e-9, "square root of 10 should be approximately 3.162")
+end)
+
 --- Comparison
 
 addTest("equals: equal numbers", function()
