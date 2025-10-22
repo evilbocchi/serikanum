@@ -288,6 +288,10 @@ function SerikaNum.unary(mantissa: number, exponent: number): (number, number)
 	return -mantissa, exponent
 end
 
+function SerikaNum.reciprocal(mantissa: number, exponent: number): (number, number)
+	return SerikaNum.div(1, 0, mantissa, exponent)
+end
+
 function SerikaNum.revert(mantissa: number, exponent: number): number
 	return mantissa * math.pow(10, exponent)
 end
@@ -634,6 +638,11 @@ end
 function OnoeNum.unary(number: Number): OnoeNum
 	local mantissa, exponent = toSerika(number)
 	return fromSerika(SerikaNum.unary(mantissa, exponent))
+end
+
+function OnoeNum.reciprocal(number: Number): OnoeNum
+	local mantissa, exponent = toSerika(number)
+	return fromSerika(SerikaNum.reciprocal(mantissa, exponent))
 end
 
 function OnoeNum.revert(number: BaseOnoeNum): number

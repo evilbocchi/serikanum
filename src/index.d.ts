@@ -234,6 +234,14 @@ export interface SerikaNum {
      */
     unary: (mantissa: number, exponent: number) => LuaTuple<[number, number]>;
     /**
+     * Calculates the reciprocal of the SerikaNum tuple (1/x).
+     *
+     * @param mantissa SerikaNum tuple's mantissa
+     * @param exponent SerikaNum tuple's exponent
+     * @returns Reciprocal of the SerikaNum tuple
+     */
+    reciprocal: (mantissa: number, exponent: number) => LuaTuple<[number, number]>;
+    /**
      * Reverts the SerikaNum tuple back to a primitive number.
      * For numbers beyond 2^1024, this will return `math.huge`.
      *
@@ -407,6 +415,10 @@ export interface OnoeNum extends BaseOnoeNum {
      */
     unary(): OnoeNum;
     /**
+     * Calculates the reciprocal of the OnoeNum object (1/x).
+     */
+    reciprocal(): OnoeNum;
+    /**
      * Reverts the OnoeNum back to a primitive number.
      * For numbers beyond 2^1024, this will return `math.huge`.
      */
@@ -518,6 +530,13 @@ export interface OnoeNumConstructor {
      * @returns Negative of the OnoeNum object
      */
     unary: (number: Number) => OnoeNum;
+    /**
+     * Calculates the reciprocal of the OnoeNum object (1/x).
+     *
+     * @param number OnoeNum object
+     * @returns Reciprocal of the OnoeNum object
+     */
+    reciprocal: (number: Number) => OnoeNum;
     /**
      * Reverts the OnoeNum back to a primitive number.
      * For numbers beyond 2^1024, this will return `math.huge`.

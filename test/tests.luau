@@ -178,6 +178,50 @@ addTest("reciprocal", function()
 	assertClose((1 / a):revert(), 0.25)
 end)
 
+addTest("reciprocal: using reciprocal method", function()
+	local a = OnoeNum.new(4)
+	local result = OnoeNum.reciprocal(a)
+	assertClose(result:revert(), 0.25, 1e-9, "reciprocal of 4 should be 0.25")
+end)
+
+addTest("reciprocal: large number", function()
+	local a = OnoeNum.new(1e6)
+	local result = OnoeNum.reciprocal(a)
+	assertClose(result:revert(), 1e-6, 1e-15, "reciprocal of 1e6 should be 1e-6")
+end)
+
+addTest("reciprocal: small number", function()
+	local a = OnoeNum.new(0.01)
+	local result = OnoeNum.reciprocal(a)
+	assertClose(result:revert(), 100, 1e-9, "reciprocal of 0.01 should be 100")
+end)
+
+addTest("reciprocal: negative number", function()
+	local a = OnoeNum.new(-5)
+	local result = OnoeNum.reciprocal(a)
+	assertClose(result:revert(), -0.2, 1e-9, "reciprocal of -5 should be -0.2")
+end)
+
+addTest("reciprocal: very large number", function()
+	local a = OnoeNum.fromString("1e100")
+	local result = OnoeNum.reciprocal(a)
+	local expected = OnoeNum.fromString("1e-100")
+	assertEquals(result, expected, "reciprocal of 1e100 should be 1e-100")
+end)
+
+addTest("reciprocal: double reciprocal equals original", function()
+	local a = OnoeNum.new(42)
+	local result = OnoeNum.reciprocal(OnoeNum.reciprocal(a))
+	assertEquals(result, a, "reciprocal of reciprocal should equal original")
+end)
+
+addTest("reciprocal: multiplication by reciprocal equals 1", function()
+	local a = OnoeNum.new(7)
+	local recip = OnoeNum.reciprocal(a)
+	local result = a:mul(recip)
+	assertClose(result:revert(), 1, 1e-9, "number times its reciprocal should equal 1")
+end)
+
 --- Comparison
 
 addTest("equals: equal numbers", function()
