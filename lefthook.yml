@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    prettier:
+      run: bun run format:prettier
+      stage_fixed: true
+    stylua:
+      run: bun run format:stylua
+      stage_fixed: true
