@@ -24,4 +24,4 @@ jobs:
 
       - name: Run tests
         run: |
-          npx lune run test/tests.luau
+          npm run test
