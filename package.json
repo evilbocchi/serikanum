@@ -14,7 +14,7 @@
         "test": "lune run test",
         "prepare": "rokit install --no-trust-check",
         "prepublishOnly": "npm run build & npm run docs",
-        "postpublish": "wally publish"
+        "postpublish": "rk wally publish"
     },
     "repository": {
         "type": "git",
