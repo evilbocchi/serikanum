@@ -4,12 +4,12 @@
   "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
   "main": "SerikaNum/init.lua",
   "scripts": {
-    "lint": "npx eslint --fix",
+    "lint": "eslint --fix",
     "build": "rbxtsc",
     "watch": "rbxtsc -w",
-    "docs": "npx typedoc",
-    "benchmark": "npx lune run benchmark",
-    "test": "npx lune run test",
+    "docs": "typedoc",
+    "benchmark": "lune run benchmark",
+    "test": "lune run test",
     "prepublishOnly": "npm run build & npm run docs",
     "postpublish": "wally publish"
   },
@@ -34,22 +34,19 @@
   },
   "devDependencies": {
     "@rbxts/compiler-types": "^3.0.0-types.0",
-    "@rbxts/types": "^1.0.881",
-    "@typescript-eslint/eslint-plugin": "^8.44.0",
-    "@typescript-eslint/parser": "^8.44.0",
-    "eslint": "^9.35.0",
+    "@rbxts/types": "^1.0.941",
+    "eslint": "^9",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-roblox-ts": "^1.1.0",
-    "rbx-lune": "^1.0.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-roblox-ts": "^1.4.1",
     "roblox-ts": "^3.0.0",
-    "rojo": "^1.0.2",
-    "typedoc": "^0.28.13",
-    "typedoc-material-theme": "^1.4.0",
+    "rkkit": "^0.0.3",
+    "typedoc": "^0.28.20",
+    "typedoc-material-theme": "^1.4.1",
     "typedoc-plugin-extras": "^4.0.1",
-    "typedoc-plugin-missing-exports": "^4.1.0",
+    "typedoc-plugin-missing-exports": "^4.1.4",
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.44.0"
+    "typescript-eslint": "^8.66.0"
   }
 }
