@@ -1,6 +1,6 @@
 {
     "name": "@rbxts/serikanum",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
     "main": "SerikaNum/init.lua",
     "scripts": {
