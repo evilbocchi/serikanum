@@ -394,6 +394,12 @@ addTest("pow: negative exponent", function()
 	assertClose((a ^ b):revert(), 0.125)
 end)
 
+addTest("pow: (-8)^(1/3)", function()
+	local a = OnoeNum.new(-8)
+	local b = OnoeNum.new(1 / 3)
+	assertClose((a ^ b):revert(), -2, 1e-9)
+end)
+
 addTest("fromString: suffix", function()
 	local num = OnoeNum.fromString("1M")
 	assertEqual(num:revert(), 1e6)
