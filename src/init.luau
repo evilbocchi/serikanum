@@ -152,7 +152,32 @@ function SerikaNum.div(mantissa1: number, exponent1: number, mantissa2: number, 
 end
 
 function SerikaNum.pow(mantissa: number, exponent: number, power: number): (number, number)
-	return fixMantissa(math.pow(mantissa, power), exponent * power)
+	if mantissa == 0 then
+		if power > 0 then
+			return 0, 0
+		elseif power == 0 then
+			return 1, 0
+		else
+			return 1, HUGE
+		end
+	end
+
+	if mantissa < 0 and power % 1 ~= 0 then
+		return fixMantissa(math.pow(mantissa, power), exponent * power)
+	end
+
+	local sign = 1
+	if mantissa < 0 then
+		mantissa = math.abs(mantissa)
+		if power % 2 ~= 0 then
+			sign = -1
+		end
+	end
+
+	local logarithm = (math.log(mantissa, 10) + exponent) * power
+	local resultExponent = math.floor(logarithm)
+	local resultMantissa = sign * math.pow(10, logarithm - resultExponent)
+	return resultMantissa, resultExponent
 end
 
 function SerikaNum.root(mantissa: number, exponent: number, root: number): (number, number)
