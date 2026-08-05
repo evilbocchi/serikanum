@@ -11,6 +11,7 @@ SerikaNum does exactly that. Its limit, `10^(2^1024)`, or 1 followed by 179 unce
 games that need to exceed the normal floating point limit of `2^1024` while not compromising on performance and convenience.
 
 ## Installation
+
 SerikaNum is pretty easy to install and use!
 To get started, download the library from any of the following options:
 
@@ -19,7 +20,9 @@ To get started, download the library from any of the following options:
 3. [npm for roblox-ts](https://www.npmjs.com/package/@rbxts/serikanum)
 
 ## Basic Usage
+
 Example in Lua:
+
 ```lua
 local OnoeNum = require(path.to.SerikaNum).OnoeNum
 
@@ -32,14 +35,14 @@ print(number) -- 505
 ```
 
 Example in TypeScript:
+
 ```ts
 import { OnoeNum } from "@rbxts/serikanum";
 
 let number = new OnoeNum(5); // make a new object representing 5
-print(number) // 5
+print(number); // 5
 let toAdd = new OnoeNum(250);
 toAdd = toAdd.mul(2); // You can only use macros due to TypeScript limitations
-number = number.add(toAdd)
-print(number) // 505
+number = number.add(toAdd);
+print(number); // 505
 ```
-

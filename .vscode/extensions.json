@@ -1,8 +1,8 @@
 {
-	"recommendations": [
-		"roblox-ts.vscode-roblox-ts",
+    "recommendations": [
+        "roblox-ts.vscode-roblox-ts",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "johnnymorganz.stylua"
-	]
+    ]
 }

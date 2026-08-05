@@ -1,53 +1,55 @@
 {
-  "name": "@rbxts/serikanum",
-  "version": "1.6.0",
-  "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
-  "main": "SerikaNum/init.lua",
-  "scripts": {
-    "lint": "eslint --fix",
-    "format": "rk StyLua .",
-    "build": "rbxtsc",
-    "watch": "rbxtsc -w",
-    "docs": "typedoc",
-    "benchmark": "lune run benchmark",
-    "test": "lune run test",
-    "prepublishOnly": "npm run build & npm run docs",
-    "postpublish": "wally publish"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/evilbocchi/serikanum.git"
-  },
-  "keywords": [],
-  "author": "evilbocchi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/evilbocchi/serikanum/issues"
-  },
-  "homepage": "https://github.com/evilbocchi/serikanum#readme",
-  "types": "SerikaNum/index.d.ts",
-  "files": [
-    "SerikaNum",
-    "!**/*.tsbuildinfo"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "devDependencies": {
-    "@rbxts/compiler-types": "^3.0.0-types.0",
-    "@rbxts/types": "^1.0.941",
-    "eslint": "^9",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.6",
-    "eslint-plugin-roblox-ts": "^1.4.1",
-    "roblox-ts": "^3.0.0",
-    "rkkit": "^0.0.3",
-    "typedoc": "^0.28.20",
-    "typedoc-material-theme": "^1.4.1",
-    "typedoc-plugin-extras": "^4.0.1",
-    "typedoc-plugin-missing-exports": "^4.1.4",
-    "typedoc-plugin-rename-defaults": "^0.7.3",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.66.0"
-  }
+    "name": "@rbxts/serikanum",
+    "version": "1.6.0",
+    "description": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
+    "main": "SerikaNum/init.lua",
+    "scripts": {
+        "lint": "eslint --fix",
+        "format:stylua": "rk StyLua .",
+        "format:prettier": "prettier --write .",
+        "format": "npm run format:stylua && npm run format:prettier",
+        "build": "rbxtsc",
+        "watch": "rbxtsc -w",
+        "docs": "typedoc",
+        "benchmark": "lune run benchmark",
+        "test": "lune run test",
+        "prepublishOnly": "npm run build & npm run docs",
+        "postpublish": "wally publish"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/evilbocchi/serikanum.git"
+    },
+    "keywords": [],
+    "author": "evilbocchi",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/evilbocchi/serikanum/issues"
+    },
+    "homepage": "https://github.com/evilbocchi/serikanum#readme",
+    "types": "SerikaNum/index.d.ts",
+    "files": [
+        "SerikaNum",
+        "!**/*.tsbuildinfo"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@rbxts/compiler-types": "^3.0.0-types.0",
+        "@rbxts/types": "^1.0.941",
+        "eslint": "^9",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.6",
+        "eslint-plugin-roblox-ts": "^1.4.1",
+        "roblox-ts": "^3.0.0",
+        "rkkit": "^0.0.3",
+        "typedoc": "^0.28.20",
+        "typedoc-material-theme": "^1.4.1",
+        "typedoc-plugin-extras": "^4.0.1",
+        "typedoc-plugin-missing-exports": "^4.1.4",
+        "typedoc-plugin-rename-defaults": "^0.7.3",
+        "typescript": "^5.5.3",
+        "typescript-eslint": "^8.66.0"
+    }
 }

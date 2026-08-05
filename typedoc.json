@@ -6,21 +6,11 @@
         "typedoc-plugin-extras",
         "typedoc-plugin-rename-defaults"
     ],
-    "projectDocuments": [
-        "documents/*.md"
-    ],
+    "projectDocuments": ["documents/*.md"],
     "placeInternalsInOwningModule": true,
-    "highlightLanguages": [
-        "lua",
-        "typescript",
-        "sh"
-    ],
-    "entryPoints": [
-        "src/index.d.ts"
-    ],
-    "exclude": [
-        "**/node_modules/**",
-    ],
+    "highlightLanguages": ["lua", "typescript", "sh"],
+    "entryPoints": ["src/index.d.ts"],
+    "exclude": ["**/node_modules/**"],
     "out": "./docsout",
     "skipErrorChecking": true,
     "excludeExternals": true,
@@ -28,5 +18,5 @@
     "customTitle": "SerikaNum",
     "customDescription": "Onoe Serika's go-to big number library for small and large-scale incremental games!",
     "entryPointStrategy": "expand",
-    "themeColor": "#ff4da0",
+    "themeColor": "#ff4da0"
 }
