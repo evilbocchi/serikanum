@@ -169,25 +169,31 @@ function SerikaNum.mod(mantissa1: number, exponent1: number, mantissa2: number, 
 	return SerikaNum.sub(mantissa1, exponent1, SerikaNum.mul(mantissa2, exponent2, dividedMantissa, dividedExponent))
 end
 
-function SerikaNum.equals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number, tolerance: number?): boolean
+function SerikaNum.equals(
+	mantissa1: number,
+	exponent1: number,
+	mantissa2: number,
+	exponent2: number,
+	tolerance: number?
+): boolean
 	return exponent1 == exponent2 and math.abs(mantissa1 - mantissa2) < (tolerance or 1e-7)
 end
 
 function SerikaNum.equalsExact(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
-    return exponent1 == exponent2 and mantissa1 == mantissa2
+	return exponent1 == exponent2 and mantissa1 == mantissa2
 end
 
 function SerikaNum.lessThan(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
 	local sign1 = math.sign(mantissa1)
-    local sign2 = math.sign(mantissa2)
-    if sign1 < sign2 then
-        return true
-    elseif sign1 > sign2 then
-        return false
-    end
+	local sign2 = math.sign(mantissa2)
+	if sign1 < sign2 then
+		return true
+	elseif sign1 > sign2 then
+		return false
+	end
 
-    -- Both numbers have the same sign
-    if exponent1 == exponent2 then
+	-- Both numbers have the same sign
+	if exponent1 == exponent2 then
 		return mantissa1 < mantissa2
 	else
 		-- For positive numbers: larger exponent means larger number
@@ -202,15 +208,15 @@ end
 
 function SerikaNum.lessEquals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
 	local sign1 = math.sign(mantissa1)
-    local sign2 = math.sign(mantissa2)
-    if sign1 < sign2 then
-        return true
-    elseif sign1 > sign2 then
-        return false
-    end
+	local sign2 = math.sign(mantissa2)
+	if sign1 < sign2 then
+		return true
+	elseif sign1 > sign2 then
+		return false
+	end
 
-    -- Both numbers have the same sign
-    if exponent1 == exponent2 then
+	-- Both numbers have the same sign
+	if exponent1 == exponent2 then
 		return mantissa1 <= mantissa2
 	else
 		-- For positive numbers: larger exponent means larger number
@@ -225,15 +231,15 @@ end
 
 function SerikaNum.moreThan(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
 	local sign1 = math.sign(mantissa1)
-    local sign2 = math.sign(mantissa2)
-    if sign1 < sign2 then
-        return false
-    elseif sign1 > sign2 then
-        return true
-    end
+	local sign2 = math.sign(mantissa2)
+	if sign1 < sign2 then
+		return false
+	elseif sign1 > sign2 then
+		return true
+	end
 
-    -- Both numbers have the same sign
-    if exponent1 == exponent2 then
+	-- Both numbers have the same sign
+	if exponent1 == exponent2 then
 		return mantissa1 > mantissa2
 	else
 		-- For positive numbers: larger exponent means larger number
@@ -248,15 +254,15 @@ end
 
 function SerikaNum.moreEquals(mantissa1: number, exponent1: number, mantissa2: number, exponent2: number): boolean
 	local sign1 = math.sign(mantissa1)
-    local sign2 = math.sign(mantissa2)
-    if sign1 < sign2 then
-        return false
-    elseif sign1 > sign2 then
-        return true
-    end
+	local sign2 = math.sign(mantissa2)
+	if sign1 < sign2 then
+		return false
+	elseif sign1 > sign2 then
+		return true
+	end
 
-    -- Both numbers have the same sign
-    if exponent1 == exponent2 then
+	-- Both numbers have the same sign
+	if exponent1 == exponent2 then
 		return mantissa1 >= mantissa2
 	else
 		-- For positive numbers: larger exponent means larger number
@@ -275,7 +281,7 @@ function SerikaNum.floor(mantissa: number, exponent: number): (number, number)
 end
 
 function SerikaNum.round(mantissa: number, exponent: number): (number, number)
-    mantissa, exponent = SerikaNum.add(mantissa, exponent, 5, -1)
+	mantissa, exponent = SerikaNum.add(mantissa, exponent, 5, -1)
 	return SerikaNum.floor(mantissa, exponent)
 end
 
@@ -318,30 +324,30 @@ function SerikaNum.random(mantissa1: number, exponent1: number, mantissa2: numbe
 	if SerikaNum.moreThan(mantissa1, exponent1, mantissa2, exponent2) then
 		mantissa1, exponent1, mantissa2, exponent2 = mantissa2, exponent2, mantissa1, exponent1
 	end
-	
+
 	-- Handle zero cases
 	if mantissa1 == 0 and mantissa2 == 0 then
 		return 0, 0
 	end
-	
+
 	-- Handle equal cases
 	if SerikaNum.equals(mantissa1, exponent1, mantissa2, exponent2) then
 		return mantissa1, exponent1
 	end
-	
+
 	-- If both numbers have the same exponent, interpolate between mantissas
 	if exponent1 == exponent2 then
 		local randomMantissa = mantissa1 + math.random() * (mantissa2 - mantissa1)
 		return fixMantissa(randomMantissa, exponent1)
 	end
-	
+
 	-- For different exponents, we need to handle the range more carefully
 	local exponentDiff = exponent2 - exponent1
-	
+
 	-- Check if both numbers have the same sign
 	local sign1 = math.sign(mantissa1)
 	local sign2 = math.sign(mantissa2)
-	
+
 	-- If signs differ, we need to handle crossing zero
 	if sign1 ~= sign2 then
 		-- Range crosses zero, so we can pick any value in the range
@@ -352,7 +358,7 @@ function SerikaNum.random(mantissa1: number, exponent1: number, mantissa2: numbe
 			return SerikaNum.new(randomValue)
 		end
 	end
-	
+
 	-- If the difference is small enough, we can work with the numbers directly
 	if exponentDiff <= 15 then -- Stay within double precision range
 		local min = SerikaNum.revert(mantissa1, exponent1)
@@ -362,13 +368,13 @@ function SerikaNum.random(mantissa1: number, exponent1: number, mantissa2: numbe
 			return SerikaNum.new(randomValue)
 		end
 	end
-	
+
 	-- For very large ranges with same sign, use the logarithmic approach
 	-- But only if both numbers are positive (negative large numbers are trickier)
 	if sign1 > 0 and sign2 > 0 then
 		-- First decide which "decade" (power of 10) the result should be in
 		local randomExponent = math.random(exponent1, exponent2 - 1)
-		
+
 		if randomExponent == exponent1 then
 			-- If we're in the same exponent as min, start from mantissa1
 			local randomMantissa = mantissa1 + math.random() * (10 - mantissa1)
@@ -383,7 +389,7 @@ function SerikaNum.random(mantissa1: number, exponent1: number, mantissa2: numbe
 			return fixMantissa(randomMantissa, randomExponent)
 		end
 	end
-	
+
 	-- Fallback: for very large negative numbers or complex cases,
 	-- convert to regular numbers if possible
 	local min = SerikaNum.revert(mantissa1, exponent1)
@@ -453,18 +459,18 @@ end
 function SerikaNum.fromSuffix(str: string): (number, number)
 	local suffix = str:match("%a+")
 	if suffix == nil then
-        local parsed = tonumber(str)
-        if parsed == nil then
-            return 0, 0
-        end
+		local parsed = tonumber(str)
+		if parsed == nil then
+			return 0, 0
+		end
 		return SerikaNum.new(parsed)
 	end
-    local found = string.find(str, suffix)
-    if found == nil then
-        return 0, 0
-    end
+	local found = string.find(str, suffix)
+	if found == nil then
+		return 0, 0
+	end
 	local mantissa = tonumber(string.sub(str, 1, found - 1))
-	
+
 	local exponent = Suffixer.getSuffixExponent(suffix)
 	if mantissa ~= nil and exponent > 0 then
 		return fixMantissa(mantissa, exponent)
@@ -480,7 +486,7 @@ function SerikaNum.fromString(str: string): (number, number)
 		local eMantissa, eExponent = SerikaNum.fromSuffix(split[2])
 		return fixMantissa(mantissa, (eMantissa * math.pow(10, eExponent)))
 	end
-	
+
 	return SerikaNum.fromSuffix(str)
 end
 
@@ -543,7 +549,7 @@ function OnoeNum.fromSerika(mantissa: number, exponent: number): OnoeNum
 end
 
 function OnoeNum.__add(self: Number, number: Number): OnoeNum
-    local selfMantissa, selfExponent = toSerika(self)
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
 	return fromSerika(SerikaNum.add(selfMantissa, selfExponent, mantissa, exponent))
 end
@@ -578,25 +584,25 @@ function OnoeNum.__pow(self: Number, number: Number): OnoeNum
 end
 
 function OnoeNum.__mod(self: Number, number: Number): OnoeNum
-    local selfMantissa, selfExponent = toSerika(self)
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
 	return fromSerika(SerikaNum.mod(selfMantissa, selfExponent, mantissa, exponent))
 end
 
 function OnoeNum.__eq(self: Number, number: Number): boolean
-    local selfMantissa, selfExponent = toSerika(self)
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
 	return SerikaNum.equals(selfMantissa, selfExponent, mantissa, exponent)
 end
 
 function OnoeNum.__lt(self: Number, number: Number): boolean
-    local selfMantissa, selfExponent = toSerika(self)
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
 	return SerikaNum.lessThan(selfMantissa, selfExponent, mantissa, exponent)
 end
 
 function OnoeNum.__le(self: Number, number: Number): boolean
-    local selfMantissa, selfExponent = toSerika(self)
+	local selfMantissa, selfExponent = toSerika(self)
 	local mantissa, exponent = toSerika(number)
 	return SerikaNum.lessEquals(selfMantissa, selfExponent, mantissa, exponent)
 end
@@ -731,13 +737,13 @@ function OnoeNum.min(...: { Number }): OnoeNum
 end
 
 function OnoeNum.minmax(a: Number, b: Number): (OnoeNum, OnoeNum)
-    local numA = OnoeNum.new(a)
-    local numB = OnoeNum.new(b)
-    if numA:lessThan(numB) then
-        return numA, numB
-    else
-        return numB, numA
-    end
+	local numA = OnoeNum.new(a)
+	local numB = OnoeNum.new(b)
+	if numA:lessThan(numB) then
+		return numA, numB
+	else
+		return numB, numA
+	end
 end
 
 function OnoeNum.random(min: Number, max: Number): OnoeNum

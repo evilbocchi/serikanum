@@ -2,6 +2,7 @@
 	"recommendations": [
 		"roblox-ts.vscode-roblox-ts",
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "johnnymorganz.stylua"
 	]
 }

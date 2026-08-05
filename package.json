@@ -5,6 +5,7 @@
   "main": "SerikaNum/init.lua",
   "scripts": {
     "lint": "eslint --fix",
+    "format": "rk StyLua .",
     "build": "rbxtsc",
     "watch": "rbxtsc -w",
     "docs": "typedoc",

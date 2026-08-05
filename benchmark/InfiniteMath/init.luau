@@ -32,7 +32,8 @@ local InfiniteMath = {
 local Number = {}
 Number.__index = Number
 
---[[ Private variables ]]--
+--[[ Private variables ]]
+--
 
 local THRESHOLD = 16
 local LEADERBOARDPRECISION, LEADERBOARDPOINT = 10000, 5
@@ -40,12 +41,13 @@ local LEADERBOARDPRECISION, LEADERBOARDPOINT = 10000, 5
 local suffixes = require("./InfiniteMath/Suffixes")
 local full_names = require("./InfiniteMath/FullNames")
 
---[[ Private functions ]]--
-local function fixNumber(first, second)	
+--[[ Private functions ]]
+--
+local function fixNumber(first, second)
 	first = tonumber(first)
 
 	if second % 1 > 0 then
-		first *= 10^(second % 1)
+		first *= 10 ^ (second % 1)
 	end
 
 	second = math.floor(second)
@@ -56,44 +58,43 @@ local function fixNumber(first, second)
 	if first == 0 or (second == 0 and first < 1) then
 		return first, 0
 	elseif second == 0 and first == 0 then
-		return 0,0
+		return 0, 0
 	elseif first < 1 * sign then
 		x = math.abs(first)
 		local log10 = math.abs(math.floor(math.log10(x)))
 
 		if log10 ~= 0 then -- Check if exponent is 0 then
 			second -= log10
-			x *= 10^log10
+			x *= 10 ^ log10
 		end
-
 	elseif first >= 1 * sign then
 		x = math.abs(first)
 
 		if math.floor(math.log10(x)) ~= 0 then -- Check if exponent is 0 then
 			second += math.floor(math.log10(x))
-			x /= 10^math.floor(math.log10(x))
+			x /= 10 ^ math.floor(math.log10(x))
 		end
 	end
 
 	if x == nil then
-		return 0/0, 0/0
+		return 0 / 0, 0 / 0
 	end
 
 	if second < 0 then
 		local Pow = math.abs(second)
 
-		x /= 10^Pow
+		x /= 10 ^ Pow
 		second += Pow
 	end
 
-	return x*sign, second
+	return x * sign, second
 end
 
 local function convert(number)
 	if typeof(number) ~= "number" then
 		error('Type is not "number".')
 	end
-	
+
 	local sign = math.sign(number)
 	number = math.abs(number)
 
@@ -103,7 +104,7 @@ local function convert(number)
 
 	if string.match(numberStr, "%.") and not string.match(numberStr, "e") then
 		local split = string.split(numberStr, ".")
-		numberStr = split[1]..""..split[2]
+		numberStr = split[1] .. "" .. split[2]
 		removed = #split[2]
 	end
 
@@ -131,19 +132,19 @@ local function convert(number)
 			local secondZ = numberStr:sub(2)
 
 			if tonumber(secondZ) > 0 then
-				first = firstZ.."."..secondZ
+				first = firstZ .. "." .. secondZ
 			else
 				first = firstZ
 			end
 		end
 	end
-	
+
 	return first * sign, second
 end
 
 local function checkNumber(a)
 	if typeof(a) ~= "number" and typeof(a) ~= "string" and typeof(a) ~= "table" then
-		error('"'..typeof(a)..'" is not a valid type. Please only use "number", "string", or constructed numbers.')
+		error('"' .. typeof(a) .. '" is not a valid type. Please only use "number", "string", or constructed numbers.')
 	end
 
 	a = InfiniteMath.new(a)
@@ -163,18 +164,18 @@ function Number.__add(a, b)
 	local first2, second2 = fixNumber(b.first, b.second)
 	if math.abs(second1 - second2) > THRESHOLD then -- Check if difference in exponents is greater than threshold
 		if math.max(second1, second2) == second1 then
-			return InfiniteMath.new({first1, second1})
+			return InfiniteMath.new({ first1, second1 })
 		end
 
-		return InfiniteMath.new({first2, second2})
+		return InfiniteMath.new({ first2, second2 })
 	end
 
 	local difference = second1 - second2
-	first2 *= (10^-difference)
+	first2 *= (10 ^ -difference)
 
 	first1, second1 = fixNumber(first1 + first2, second1)
 
-	return InfiniteMath.new({first1 , second1})
+	return InfiniteMath.new({ first1, second1 })
 end
 
 function Number.__sub(a, b)
@@ -184,18 +185,18 @@ function Number.__sub(a, b)
 	local first2, second2 = fixNumber(b.first, b.second)
 	if math.abs(second1 - second2) > THRESHOLD then -- Check if difference in exponents is greater than threshold
 		if math.max(second1, second2) == second1 then
-			return InfiniteMath.new({first1 ,second1})
+			return InfiniteMath.new({ first1, second1 })
 		end
 
-		return InfiniteMath.new({first2, second2})
+		return InfiniteMath.new({ first2, second2 })
 	end
 
 	local difference = second1 - second2
-	first2 *= (10^-difference)
+	first2 *= (10 ^ -difference)
 
 	first1, second1 = fixNumber(first1 - first2, second1)
 
-	return InfiniteMath.new({first1 , second1})
+	return InfiniteMath.new({ first1, second1 })
 end
 
 function Number.__mul(a, b)
@@ -206,7 +207,7 @@ function Number.__mul(a, b)
 
 	first1, second1 = fixNumber(first1 * first2, second1 + second2)
 
-	return InfiniteMath.new({first1 , second1})
+	return InfiniteMath.new({ first1, second1 })
 end
 
 function Number.__div(a, b)
@@ -215,9 +216,9 @@ function Number.__div(a, b)
 	local first1, second1 = fixNumber(a.first, a.second)
 	local first2, second2 = fixNumber(b.first, b.second)
 
-	first1, second1 = fixNumber(first1/first2, second1 - second2)
+	first1, second1 = fixNumber(first1 / first2, second1 - second2)
 
-	return InfiniteMath.new({first1 , second1})
+	return InfiniteMath.new({ first1, second1 })
 end
 
 function Number.__pow(a, power)
@@ -228,7 +229,7 @@ function Number.__pow(a, power)
 	end
 
 	if power == math.huge or power ~= power or typeof(power) ~= "number" then
-		error(power.." is not a valid power.")
+		error(power .. " is not a valid power.")
 	end
 
 	local sign = InfiniteMath.sign(a)
@@ -236,7 +237,7 @@ function Number.__pow(a, power)
 
 	local first, second = fixNumber(a.first, a.second)
 
-	if first^power == math.huge or second * power == math.huge then
+	if first ^ power == math.huge or second * power == math.huge then
 		if typeof(power) ~= "number" then
 			power = power:Reverse()
 		end
@@ -264,9 +265,9 @@ function Number.__pow(a, power)
 		else
 			firstAnswer, secondAnswer = first, second
 		end
-		return InfiniteMath.new({firstAnswer, secondAnswer})
+		return InfiniteMath.new({ firstAnswer, secondAnswer })
 	else
-		return InfiniteMath.new({first^power, second*power}) * sign
+		return InfiniteMath.new({ first ^ power, second * power }) * sign
 	end
 end
 
@@ -332,10 +333,11 @@ function Number.__tostring(self)
 end
 
 function Number.__concat(self, value)
-	return tostring(self)..value
+	return tostring(self) .. value
 end
 
---[[ Class methods ]]--
+--[[ Class methods ]]
+--
 
 --[=[
 	@within InfiniteMath
@@ -359,11 +361,13 @@ end
 	@return Number
 ]=]
 
-function InfiniteMath.new(val)	
+function InfiniteMath.new(val)
 	local first, second
-	
+
 	if typeof(val) == "table" then
-		if val.first ~= nil and val.second ~= nil then return val end
+		if val.first ~= nil and val.second ~= nil then
+			return val
+		end
 		if typeof(val[1]) ~= "number" or typeof(val[2]) ~= "number" then
 			error("Both arguments of table must be numbers.")
 		end
@@ -372,24 +376,28 @@ function InfiniteMath.new(val)
 		second = val[2]
 	elseif typeof(val) == "string" then
 		if tonumber(val) == nil then
-			first, second = fixNumber(table.unpack(val:split(',')))
+			first, second = fixNumber(table.unpack(val:split(",")))
 		else
 			first, second = convert(tonumber(val))
 		end
-	elseif typeof(val) == 'number' then
+	elseif typeof(val) == "number" then
 		if val == 1e+999 then
 			error('INF number is not allowed. Please use "string" or "table" instead of "number" to go above INF.')
 		end
 
 		first, second = convert(val)
 	else
-		error('"'..typeof(val)..'" is not a valid type. Please only use "number", "string", "table", or constructed numbers.')
+		error(
+			'"'
+				.. typeof(val)
+				.. '" is not a valid type. Please only use "number", "string", "table", or constructed numbers.'
+		)
 		return
 	end
 
 	return setmetatable({
 		first = first,
-		second = second
+		second = second,
 	}, Number)
 end
 
@@ -409,7 +417,7 @@ end
 function Number:Reverse()
 	local first, second = fixNumber(self.first, self.second)
 
-	return first * 10^second
+	return first * 10 ^ second
 end
 
 --[=[
@@ -431,13 +439,13 @@ end
 ]=]
 
 function Number:GetSuffix(abbreviation)
-	if abbreviation == nil then 
-		abbreviation = true 
+	if abbreviation == nil then
+		abbreviation = true
 	end
 
 	local first, second = fixNumber(self.first, self.second)
 
-	if second < 3 then 
+	if second < 3 then
 		local result = tostring(self:Reverse())
 
 		if first >= 1 then
@@ -457,12 +465,14 @@ function Number:GetSuffix(abbreviation)
 	end
 
 	local secondRemainder = second % 3
-	first *= 10^secondRemainder
+	first *= 10 ^ secondRemainder
 
-	local suffixIndex = math.floor(second/3)
-	local str = math.floor(first * 10^InfiniteMath.DECIMALPOINTS)/10^InfiniteMath.DECIMALPOINTS -- The * 10 / 10 controls decimal precision, more zeros = more decimals
+	local suffixIndex = math.floor(second / 3)
+	local str = math.floor(first * 10 ^ InfiniteMath.DECIMALPOINTS) / 10 ^ InfiniteMath.DECIMALPOINTS -- The * 10 / 10 controls decimal precision, more zeros = more decimals
 
-	local suffix = if abbreviation then suffixes[suffixIndex] else (full_names[suffixIndex] and " " .. full_names[suffixIndex] or nil)
+	local suffix = if abbreviation
+		then suffixes[suffixIndex]
+		else (full_names[suffixIndex] and " " .. full_names[suffixIndex] or nil)
 
 	if suffixIndex > 0 then
 		if suffix ~= nil then
@@ -508,7 +518,7 @@ function Number:ScientificNotation(abbreviation, secondAbbreviation)
 	local first, second = fixNumber(self.first, self.second)
 	first, second = tostring(first), tostring(second)
 
-	local str = math.floor(first * 10^InfiniteMath.DECIMALPOINTS)/10^InfiniteMath.DECIMALPOINTS -- The * 10 / 10 controls decimal precision, more zeros = more decimals
+	local str = math.floor(first * 10 ^ InfiniteMath.DECIMALPOINTS) / 10 ^ InfiniteMath.DECIMALPOINTS -- The * 10 / 10 controls decimal precision, more zeros = more decimals
 
 	if tonumber(second) > 1e+6 and secondAbbreviation ~= false then
 		if abbreviation == true or abbreviation == nil then
@@ -518,7 +528,7 @@ function Number:ScientificNotation(abbreviation, secondAbbreviation)
 		end
 	end
 
-	return str.."e+"..second
+	return str .. "e+" .. second
 end
 
 --[=[
@@ -538,13 +548,13 @@ function Number:LogarithmNotation()
 	local first, second = fixNumber(self.first, self.second)
 	first, second = tostring(first), tostring(second)
 
-	local suffixIndex = math.floor(second/3)
+	local suffixIndex = math.floor(second / 3)
 
 	if suffixIndex == 0 then
 		local secondRemainder = second % 3
-		first *= 10^secondRemainder
+		first *= 10 ^ secondRemainder
 
-		return math.floor(first * 10^InfiniteMath.DECIMALPOINTS)/10^InfiniteMath.DECIMALPOINTS
+		return math.floor(first * 10 ^ InfiniteMath.DECIMALPOINTS) / 10 ^ InfiniteMath.DECIMALPOINTS
 	end
 
 	local log = tostring(math.log10(first))
@@ -554,10 +564,37 @@ function Number:LogarithmNotation()
 		log = log[2]:sub(1, 3)
 	end
 
-	return "e"..second.."."..log
+	return "e" .. second .. "." .. log
 end
 
-local Alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+local Alphabet = {
+	"a",
+	"b",
+	"c",
+	"d",
+	"e",
+	"f",
+	"g",
+	"h",
+	"i",
+	"j",
+	"k",
+	"l",
+	"m",
+	"n",
+	"o",
+	"p",
+	"q",
+	"r",
+	"s",
+	"t",
+	"u",
+	"v",
+	"w",
+	"x",
+	"y",
+	"z",
+}
 
 --[=[
 	@within Number
@@ -576,9 +613,9 @@ function Number:aaNotation()
 	local first, second = fixNumber(self.first, self.second)
 
 	local secondRemainder = second % 3
-	first *= 10^secondRemainder
+	first *= 10 ^ secondRemainder
 
-	local suffixIndex = math.floor(second/3)
+	local suffixIndex = math.floor(second / 3)
 
 	if suffixIndex < 5 then
 		return self:GetSuffix()
@@ -594,10 +631,10 @@ function Number:aaNotation()
 		return self:ScientificNotation()
 	end
 
-	local str = math.floor(first * 10^InfiniteMath.DECIMALPOINTS)/10^InfiniteMath.DECIMALPOINTS -- The * 10 / 10 controls decimal precision, more zeros = more decimals
-	local unit = Alphabet[firstUnit]..Alphabet[secondUnit]
+	local str = math.floor(first * 10 ^ InfiniteMath.DECIMALPOINTS) / 10 ^ InfiniteMath.DECIMALPOINTS -- The * 10 / 10 controls decimal precision, more zeros = more decimals
+	local unit = Alphabet[firstUnit] .. Alphabet[secondUnit]
 
-	return str..unit
+	return str .. unit
 end
 
 --[=[
@@ -619,7 +656,7 @@ function Number:ConvertForLeaderboards()
 
 	first = first:gsub("%.", "")
 
-	return math.floor(tonumber(second.."."..first:sub(1, LEADERBOARDPOINT)) * LEADERBOARDPRECISION)
+	return math.floor(tonumber(second .. "." .. first:sub(1, LEADERBOARDPOINT)) * LEADERBOARDPRECISION)
 end
 
 --[=[
@@ -640,18 +677,19 @@ end
 function InfiniteMath:ConvertFromLeaderboards(GivenNumber)
 	GivenNumber /= LEADERBOARDPRECISION
 
-	local numbers = tostring(GivenNumber):split('.')
+	local numbers = tostring(GivenNumber):split(".")
 	local second, first = numbers[1], numbers[2]
 
 	local firstFirst = tostring(first):sub(1, 1)
 	local firstSecond = tostring(first):sub(2)
 
-	first = firstFirst.."."..firstSecond
+	first = firstFirst .. "." .. firstSecond
 
-	return InfiniteMath.new({tonumber(first), tonumber(second)})
+	return InfiniteMath.new({ tonumber(first), tonumber(second) })
 end
 
---[[ Math methods ]]--
+--[[ Math methods ]]
+--
 
 --[=[
 	@within InfiniteMath
@@ -666,7 +704,9 @@ function InfiniteMath.floor(Num)
 	Num = checkNumber(Num)
 
 	local _first, second = fixNumber(Num.first, Num.second)
-	if second >= 300 then return Num end -- Rounding after 1e+300 would be pointless, so don't do it.
+	if second >= 300 then
+		return Num
+	end -- Rounding after 1e+300 would be pointless, so don't do it.
 
 	return InfiniteMath.new(math.floor(Num:Reverse()))
 end
@@ -686,12 +726,14 @@ function InfiniteMath.round(Num)
 	Num *= sign
 
 	local first, second = fixNumber(Num.first, Num.second)
-	if second >= 300 then return Num * sign end -- Rounding after 1e+300 would be pointless, so don't do it.
+	if second >= 300 then
+		return Num * sign
+	end -- Rounding after 1e+300 would be pointless, so don't do it.
 
 	local firstSplit = math.abs(first) % 1
 
 	if firstSplit ~= 0 then
-		if firstSplit >= .5 then
+		if firstSplit >= 0.5 then
 			return InfiniteMath.new(math.ceil(Num:Reverse())) * sign
 		else
 			return InfiniteMath.new(math.floor(Num:Reverse())) * sign
@@ -712,9 +754,11 @@ end
 
 function InfiniteMath.ceil(Num)
 	Num = checkNumber(Num)
-	
+
 	local _first, second = fixNumber(Num.first, Num.second)
-	if second >= 300 then return Num end -- Rounding after 1e+300 would be pointless, so don't do it.
+	if second >= 300 then
+		return Num
+	end -- Rounding after 1e+300 would be pointless, so don't do it.
 
 	return InfiniteMath.new(math.ceil(Num:Reverse()))
 end
@@ -732,7 +776,7 @@ function InfiniteMath.abs(Num)
 	Num = checkNumber(Num)
 	local first, second = fixNumber(Num.first, Num.second)
 
-	return InfiniteMath.new({math.abs(first), second})
+	return InfiniteMath.new({ math.abs(first), second })
 end
 
 --[=[
@@ -749,12 +793,12 @@ end
 function InfiniteMath.clamp(Num, Min, Max)
 	Num = checkNumber(Num)
 	local first, second = fixNumber(Num.first, Num.second)
-	Num = InfiniteMath.new({first, second})
+	Num = InfiniteMath.new({ first, second })
 
 	if Min ~= nil then
 		Min = checkNumber(Min)
 		local firstMin, secondMin = fixNumber(Min.first, Min.second)
-		Min = InfiniteMath.new({firstMin, secondMin})
+		Min = InfiniteMath.new({ firstMin, secondMin })
 	else
 		Min = InfiniteMath.new(0)
 	end
@@ -762,7 +806,7 @@ function InfiniteMath.clamp(Num, Min, Max)
 	if Max ~= nil then
 		Max = checkNumber(Max)
 		local firstMax, secondMax = fixNumber(Max.first, Max.second)
-		Max = InfiniteMath.new({firstMax, secondMax})
+		Max = InfiniteMath.new({ firstMax, secondMax })
 	else
 		Max = InfiniteMath.new("1, 1e+308")
 	end
@@ -782,7 +826,7 @@ end
 ]=]
 
 function InfiniteMath.min(...)
-	local Numbers = {...}
+	local Numbers = { ... }
 	if Numbers[1] == nil then
 		error("InfiniteMath.min requires at least 1 argument.")
 	end
@@ -812,7 +856,7 @@ end
 ]=]
 
 function InfiniteMath.max(...)
-	local Numbers = {...}
+	local Numbers = { ... }
 	if Numbers[1] == nil then
 		error("InfiniteMath.max requires at least 1 argument.")
 	end
@@ -859,7 +903,7 @@ end
 ]=]
 
 function InfiniteMath.sqrt(Num)
-	return Num^.5
+	return Num ^ 0.5
 end
 
 --[=[
@@ -900,18 +944,18 @@ function InfiniteMath.modf(Num)
 
 	if firstSplit[2] ~= nil then
 		first = firstSplit[2]:sub(1, second)
-		first = firstSplit[1].."."..first
+		first = firstSplit[1] .. "." .. first
 
 		local power = if second == 0 then 2 else second
 		local decimal
 
 		if second > 0 then
-			decimal = firstSplit[2]:sub(power + 1) / 10^#firstSplit[2]:sub(power + 1)
+			decimal = firstSplit[2]:sub(power + 1) / 10 ^ #firstSplit[2]:sub(power + 1)
 		else
-			decimal = firstSplit[2] / 10^#firstSplit[2]
+			decimal = firstSplit[2] / 10 ^ #firstSplit[2]
 		end
 
-		return InfiniteMath.new({first, second}) * sign, decimal
+		return InfiniteMath.new({ first, second }) * sign, decimal
 	end
 
 	return Num
@@ -930,12 +974,12 @@ end
 function InfiniteMath.log(Num, Base)
 	Num = checkNumber(Num)
 
-	if InfiniteMath.sign(Num) == -1 then 
-		return 0/0  -- log of a negative number is always nan
+	if InfiniteMath.sign(Num) == -1 then
+		return 0 / 0 -- log of a negative number is always nan
 	end
 
-	if Base == nil then 
-		Base = 2.7182818 
+	if Base == nil then
+		Base = 2.7182818
 	end
 
 	local first, second = fixNumber(Num.first, Num.second)

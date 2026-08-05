@@ -24,13 +24,23 @@ end
 function assertClose(actual, expected, epsilon, msg)
 	epsilon = epsilon or 1e-9
 	if math.abs(actual - expected) >= epsilon then
-		error((msg or "") .. " Expected "..tostring(actual).." ≈ "..tostring(expected).." (epsilon="..tostring(epsilon)..")", 2)
+		error(
+			(msg or "")
+				.. " Expected "
+				.. tostring(actual)
+				.. " ≈ "
+				.. tostring(expected)
+				.. " (epsilon="
+				.. tostring(epsilon)
+				.. ")",
+			2
+		)
 	end
 end
 
 function assertEquals(actual, expected, msg)
 	if not actual:equals(expected) then
-        print(actual.mantissa, actual.exponent, expected.mantissa, expected.exponent)
+		print(actual.mantissa, actual.exponent, expected.mantissa, expected.exponent)
 		error((msg or "") .. " Expected " .. expected:toString() .. ", got " .. actual:toString(), 2)
 	end
 end
@@ -72,14 +82,12 @@ function runTests()
 		end
 	end
 	print("Tests finished. Passed:", passed, "Failed:", failed)
-    if failed > 0 then
-        process.exit(1)
-    else
-        process.exit(0)
-    end
+	if failed > 0 then
+		process.exit(1)
+	else
+		process.exit(0)
+	end
 end
-
-
 
 --- Construction
 
@@ -122,7 +130,7 @@ addTest("scientificNotation: handles scientific notation in various formats", fu
 	local cases = {
 		{ input = "1.23e+45", expected = 1.23e45 },
 		{ input = "1.23e-5", expected = 1.23e-5 },
-		{ input = "1e10", expected = 1e10 }
+		{ input = "1e10", expected = 1e10 },
 	}
 	for _, case in ipairs(cases) do
 		local num = OnoeNum.fromString(case.input)
@@ -282,7 +290,7 @@ end)
 addTest("root: relationship with pow", function()
 	local a = OnoeNum.new(8)
 	local root_result = OnoeNum.root(a, 3)
-	local pow_result = a:pow(1/3)
+	local pow_result = a:pow(1 / 3)
 	assertClose(root_result:revert(), pow_result:revert(), 1e-9, "root(x, n) should equal pow(x, 1/n)")
 end)
 
@@ -512,7 +520,7 @@ end)
 addTest("large: basic operations with googol", function()
 	local googol = OnoeNum.new(10):pow(OnoeNum.new(100))
 	local two = OnoeNum.new(2)
-	
+
 	-- Test basic operations
 	local doubled = googol:mul(two)
 	local halved = doubled:div(two)
@@ -521,12 +529,12 @@ end)
 
 addTest("large: extreme numbers within safe limit", function()
 	-- Test numbers approaching the safe limits mentioned in the code
-	local large_exp = OnoeNum.new({mantissa = 1, exponent = 100})
-	local larger_exp = OnoeNum.new({mantissa = 1, exponent = 101})
-	
+	local large_exp = OnoeNum.new({ mantissa = 1, exponent = 100 })
+	local larger_exp = OnoeNum.new({ mantissa = 1, exponent = 101 })
+
 	-- Test basic operations
 	assertMoreThan(larger_exp, large_exp, "Larger exponent number should be greater")
-	
+
 	local sum = large_exp:add(larger_exp)
 	assertMoreThan(sum, larger_exp, "Sum should be greater than either addend")
 end)
@@ -534,28 +542,38 @@ end)
 addTest("large: operations with scientific notation", function()
 	local huge1 = OnoeNum.fromString("1e1000")
 	local huge2 = OnoeNum.fromString("2e1000")
-	
+
 	-- Test that operations work with very large numbers
 	local sum = huge1:add(huge2)
 	assertMoreThan(sum, huge2, "Sum of huge numbers should be larger")
-	
+
 	local product = huge1:mul(huge2)
 	assertMoreThan(product, sum, "Product should be much larger than sum")
 end)
 
 addTest("large: numbers approaching ee308 limit", function()
 	-- Test numbers with significant hyperoperation levels but within safe bounds
-	local near_limit1 = OnoeNum.new({mantissa = 1, exponent = 1e15})
+	local near_limit1 = OnoeNum.new({ mantissa = 1, exponent = 1e15 })
 
-    local near_limit2 = OnoeNum.new({mantissa = 1, exponent = 1e40})
-	
+	local near_limit2 = OnoeNum.new({ mantissa = 1, exponent = 1e40 })
+
 	-- Test basic operations work
 	local doubled = near_limit1:mul(near_limit2)
 	assertMoreEquals(doubled, near_limit2, "Operations should work on extreme numbers")
-	
+
 	-- Test string conversion works
 	local str = near_limit1:toString()
 	assert(type(str) == "string" and #str > 0, "Should convert to string")
+end)
+
+addTest("large: 2^5000", function()
+	local two = OnoeNum.new(2)
+	local exp = OnoeNum.new(5000)
+	local result = two:pow(exp)
+
+	-- Test that the result is greater than 1e1500
+	local threshold = OnoeNum.fromString("1e1500")
+	assertMoreThan(result, threshold, "2^5000 should be greater than 1e1500")
 end)
 
 --- Edge Cases and Boundary Conditions
@@ -563,7 +581,7 @@ end)
 addTest("edge: zero in various operations", function()
 	local zero = OnoeNum.new(0)
 	local nonzero = OnoeNum.new(42)
-	
+
 	-- Test zero behavior
 	assertEquals(zero:mul(nonzero), zero, "0 * a should equal 0")
 	assertEquals(zero:pow(nonzero), zero, "0^a should equal 0 (for positive a)")
@@ -573,14 +591,14 @@ end)
 addTest("edge: negative numbers", function()
 	local neg = OnoeNum.new(-5)
 	local pos = OnoeNum.new(3)
-	
+
 	-- Test negative number operations
 	local sum = neg:add(pos)
 	assertEqual(sum:revert(), -2)
-	
+
 	local product = neg:mul(pos)
 	assertEqual(product:revert(), -15)
-	
+
 	-- Test absolute value
 	assertEquals(neg:abs(), OnoeNum.new(5), "abs(-5) should equal 5")
 end)
@@ -588,11 +606,11 @@ end)
 addTest("edge: very small numbers", function()
 	local tiny = OnoeNum.new(1e-100)
 	local small = OnoeNum.new(1e-50)
-	
+
 	-- Test operations with very small numbers
 	local sum = tiny:add(small)
 	assertMoreEquals(sum, small, "Sum should be dominated by larger number")
-	
+
 	local product = tiny:mul(small)
 	assertLessThan(product, tiny, "Product should be smaller")
 end)
@@ -601,7 +619,7 @@ addTest("edge: comparison edge cases", function()
 	local a = OnoeNum.new(1)
 	local b = OnoeNum.new(1)
 	local c = OnoeNum.new(2)
-	
+
 	-- Test equality and comparison
 	assertEquals(a, b, "Equal numbers should be equal")
 	assert(not a:equals(c), "Different numbers should not be equal")
@@ -614,10 +632,17 @@ end)
 addTest("edge: string parsing edge cases", function()
 	-- Test various string formats
 	local cases = {
-		"0", "1", "-1", "123.456", "-123.456",
-		"1e5", "-1e5", "1.5e10", "-2.3e-5"
+		"0",
+		"1",
+		"-1",
+		"123.456",
+		"-123.456",
+		"1e5",
+		"-1e5",
+		"1.5e10",
+		"-2.3e-5",
 	}
-	
+
 	for _, case in ipairs(cases) do
 		local num = OnoeNum.fromString(case)
 		assert(num ~= nil, "Should parse string: " .. case)
@@ -631,10 +656,10 @@ end)
 addTest("edge: min/max operations", function()
 	local a = OnoeNum.new(5)
 	local b = OnoeNum.new(10)
-	
+
 	assertEquals(a:min(b), a, "min(5,10) should equal 5")
 	assertEquals(a:max(b), b, "max(5,10) should equal 10")
-	
+
 	local min_val, max_val = a:minmax(b)
 	assertEquals(min_val, a, "minmax should return min first")
 	assertEquals(max_val, b, "minmax should return max second")
@@ -645,7 +670,7 @@ end)
 addTest("random: basic range", function()
 	local min_val = OnoeNum.new(5)
 	local max_val = OnoeNum.new(10)
-	
+
 	for i = 1, 10 do
 		local random_val = OnoeNum.random(min_val, max_val)
 		assertMoreEquals(random_val, min_val, "Random value should be >= min")
@@ -656,7 +681,7 @@ end)
 addTest("random: swapped parameters", function()
 	local min_val = OnoeNum.new(5)
 	local max_val = OnoeNum.new(10)
-	
+
 	-- Test with swapped parameters - should auto-correct
 	local random_val = OnoeNum.random(max_val, min_val)
 	assertMoreEquals(random_val, min_val, "Random value should be >= min (auto-swapped)")
@@ -666,7 +691,7 @@ end)
 addTest("random: large numbers same exponent", function()
 	local min_val = OnoeNum.new(1e15)
 	local max_val = OnoeNum.new(9e15)
-	
+
 	for i = 1, 5 do
 		local random_val = OnoeNum.random(min_val, max_val)
 		assertMoreEquals(random_val, min_val, "Large random value should be >= min")
@@ -677,7 +702,7 @@ end)
 addTest("random: very large numbers different exponents", function()
 	local min_val = OnoeNum.fromString("1e100")
 	local max_val = OnoeNum.fromString("1e200")
-	
+
 	for i = 1, 5 do
 		local random_val = OnoeNum.random(min_val, max_val)
 		assertMoreEquals(random_val, min_val, "Very large random value should be >= min")
@@ -688,7 +713,7 @@ end)
 addTest("random: including negative numbers", function()
 	local min_val = OnoeNum.new(-10)
 	local max_val = OnoeNum.new(10)
-	
+
 	for i = 1, 10 do
 		local random_val = OnoeNum.random(min_val, max_val)
 		assertMoreEquals(random_val, min_val, "Random value should be >= min (negative)")
