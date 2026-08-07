@@ -17,4 +17,6 @@ number.
 To truly enjoy SerikaNum's benefits, try using OnoeNum! It's a wrapper library to balance performance and development speed, being fast enough that
 you wouldn't have to worry while keeping it simple.
 
+If you care slightly about speed but aren't crazy about it and need a higher limit, check out my other library, [AlyaNum](https://github.com/evilbocchi/alyanum), which offers a larger cap of 10^^^^^10.
+
 Okkei? Ah, okkei.
